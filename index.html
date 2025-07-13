@@ -33,6 +33,9 @@
     <button onclick="makePayment()">결제하기</button>
 
     <script>
+      // Pi SDK 초기화
+      Pi.init({ version: "2.0" });
+
       async function makePayment() {
         try {
           const scopes = ['username', 'payments'];
