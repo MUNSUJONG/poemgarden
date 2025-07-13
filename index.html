@@ -1,24 +1,61 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <title>Poem Garden</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>파이 감성정원</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #fdf6f0;
-      color: #444;
       text-align: center;
-      padding-top: 100px;
+      background-color: #fff8f0;
+      margin: 0;
+      padding: 50px;
     }
     h1 {
-      font-size: 2.5em;
-      color: #cc6699;
+      color: #b30059;
+      font-size: 2em;
+    }
+    .flower {
+      font-size: 2em;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 24px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      background-color: #ffc6d0;
+      color: #70002d;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #fcb1c0;
     }
   </style>
 </head>
 <body>
-  <h1>🌸 환영합니다! 파이 감성정원입니다 🌸</h1>
+  <div class="flower">🌸</div>
+  <h1>환영합니다! 파이 감성정원입니다 🌸</h1>
+  <button onclick="makePayment()">💰 Pi 테스트 결제</button>
+
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    Pi.init({ version: "2.0" });
+
+    function makePayment() {
+      Pi.createPayment({
+        amount: 0.01,
+        memo: "파이 감성정원 테스트 결제",
+        metadata: { app: "paipoemgarden" }
+      })
+      .then(function(payment) {
+        alert("결제 성공: " + JSON.stringify(payment));
+      })
+      .catch(function(error) {
+        alert("결제 실패: " + error);
+      });
+    }
+  </script>
 </body>
 </html>
