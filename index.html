@@ -1,61 +1,46 @@
+
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>파이 감성정원 테스트 결제</title>
-    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-    <style>
-      body {
-        background-color: #fffafc;
-        font-family: sans-serif;
-        text-align: center;
-        padding: 2rem;
+<head>
+  <meta charset="UTF-8">
+  <title>Pi 감성정원 테스트 결제</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+    window.addEventListener("load", () => {
+      if (!window.Pi) {
+        alert("❌ Pi SDK 로드 실패");
+      } else {
+        Pi.init({ version: "2.0" });
+        alert("✅ Pi SDK 로드 및 초기화 완료");
       }
-      h1 {
-        color: #b4005c;
-        margin-bottom: 1rem;
-      }
-      .btn {
-        padding: 1rem 2rem;
-        font-size: 1.2rem;
-        background-color: #ff99cc;
-        color: white;
-        border: none;
-        border-radius: 10px;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>🌸 파이 감성정원 🌸</h1>
-    <p>0.01π 테스트 결제를 진행해보세요.</p>
-    <button class="btn" onclick="makePayment()">테스트 결제</button>
+    });
+  </script>
+</head>
+<body style="text-align:center;padding:100px;">
+  <h1>🌸 감성정원 테스트 결제 🌸</h1>
+  <button onclick="makePayment()" style="padding:20px 40px; font-size:18px;">테스트 결제</button>
 
-    <script>
-      const Pi = window.Pi;
-      Pi.init({ version: "2.0" });
-
-      function makePayment() {
-        Pi.createPayment({
-          amount: 0.01,
-          memo: "파이 감성정원 테스트 결제",
-          metadata: { type: "test", app: "poemgarden" },
-          onReadyForServerApproval: (paymentId) => {
-            console.log("Payment ready for server approval", paymentId);
-          },
-          onReadyForServerCompletion: (paymentId, txid) => {
-            console.log("Payment ready for server completion", paymentId, txid);
-          },
-          onCancel: (paymentId) => {
-            console.log("Payment cancelled", paymentId);
-            alert("결제가 취소되었습니다.");
-          },
-          onError: (error, payment) => {
-            console.error("Payment error", error);
-            alert("결제 오류 발생: " + error.message);
-          }
-        });
-      }
-    </script>
-  </body>
+  <script>
+    function makePayment() {
+      alert("🔔 결제 시작!");
+      Pi.createPayment({
+        amount: 0.01,
+        memo: "감성정원 테스트 결제",
+        metadata: { type: "test" },
+        onReadyForServerApproval: (paymentId) => {
+          alert("✅ 서버 승인 준비됨: " + paymentId);
+        },
+        onReadyForServerCompletion: (paymentId, txid) => {
+          alert("🎉 결제 완료! TxID: " + txid);
+        },
+        onCancel: (paymentId) => {
+          alert("❌ 결제 취소됨: " + paymentId);
+        },
+        onError: (error) => {
+          alert("⚠️ 결제 오류: " + error.message);
+        }
+      });
+    }
+  </script>
+</body>
 </html>
