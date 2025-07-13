@@ -17,7 +17,7 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <script>
-    // SDK 초기화 (테스트 모드로 설정)
+    // SDK 초기화 (테스트용 sandbox 활성화)
     Pi.init({ version: "2.0", sandbox: true });
 
     async function makePayment() {
@@ -27,6 +27,7 @@
           console.log('User info:', payload);
         });
 
+        // 🔹 createPayment 호출 시 await 필수
         const payment = await Pi.createPayment(
           {
             amount: 0.01,
@@ -51,7 +52,7 @@
           }
         );
 
-        // ✅ 결제 승인창 띄우는 핵심 단계
+        // ✅ 결제 승인창 띄우는 핵심 호출
         await payment.approve();
 
       } catch (error) {
