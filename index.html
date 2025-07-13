@@ -3,104 +3,102 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원</title>
+  <title>파이 감성정원 2.0 – Bloom the World</title>
   <style>
     body {
-      background-color: #fef6f9;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff9f9;
+      color: #444;
       margin: 0;
       padding: 0;
-      color: #333;
     }
     header {
-      text-align: center;
-      background: linear-gradient(to right, #f8bbd0, #f48fb1);
-      padding: 20px 10px;
-      color: white;
-    }
-    h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-    .heart {
-      font-size: 20px;
-      margin-top: 5px;
-    }
-    .container {
+      background-color: #ffe4ec;
       padding: 20px;
       text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .emotion-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 20px auto;
-      max-width: 400px;
+    header h1 {
+      color: #d81b60;
+      margin: 0;
     }
-    .emotion {
-      padding: 15px;
-      border-radius: 10px;
-      background-color: #fff0f6;
-      border: 1px solid #f48fb1;
-      cursor: pointer;
+    nav {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fce4ec;
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
     }
-    .section {
-      margin: 30px 0;
-      padding: 15px;
-      background-color: #fff8fb;
-      border-radius: 10px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+    nav a {
+      text-decoration: none;
+      color: #d81b60;
+      font-weight: bold;
     }
-    .button {
-      background-color: #e91e63;
+    section {
+      padding: 20px;
+      max-width: 768px;
+      margin: auto;
+    }
+    .btn {
+      background-color: #ec407a;
       color: white;
-      padding: 12px 25px;
+      padding: 12px 24px;
       border: none;
+      border-radius: 8px;
       font-size: 16px;
-      border-radius: 5px;
       cursor: pointer;
-      margin-top: 15px;
+      margin-top: 20px;
+    }
+    .btn:hover {
+      background-color: #d81b60;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>🌸 파이 감성정원</h1>
-    <div class="heart">❤️ 42</div>
+    <h1>🌸 파이 감성정원 2.0 🌸</h1>
+    <p>오늘의 꽃과 감성시를 만나보세요</p>
   </header>
 
-  <div class="container">
-    <div class="section">
-      <h2>오늘의 감정을 선택해주세요</h2>
-      <div class="emotion-grid">
-        <div class="emotion">😊 기쁨</div>
-        <div class="emotion">💓 설렘</div>
-        <div class="emotion">😌 평온</div>
-        <div class="emotion">😔 외로움</div>
-        <div class="emotion">🌟 희망</div>
-        <div class="emotion">🌙 그리움</div>
-        <div class="emotion">😢 우울</div>
-        <div class="emotion">🙏 감사</div>
-      </div>
-    </div>
+  <section id="home">
+    <h2>🏠 홈</h2>
+    <p>오늘의 꽃: 🌼 해바라기</p>
+    <p>오늘의 시: “너를 바라보면, 꽃이 핀다”</p>
+    <button class="btn" onclick="makePayment()">0.01π 테스트 결제</button>
+  </section>
 
-    <div class="section">
-      <h2>오늘의 감정 연결 (1일 1회)</h2>
-      <textarea placeholder="오늘 하루 어떠셨나요? 마음속 이야기를 들려주세요..." maxlength="300" rows="4" style="width: 90%; border-radius: 8px; border: 1px solid #ccc; padding: 10px;"></textarea>
-      <br/>
-      <button class="button">감정 연결하기</button>
-    </div>
+  <section id="poetry">
+    <h2>📖 감성 시집</h2>
+    <p>감정별 / 꽃별 시를 탐색하고 공감해보세요.</p>
+  </section>
 
-    <div class="section">
-      <h2>시집 만들기 & 결제</h2>
-      <p>아래 버튼을 눌러 감성 결제를 테스트해보세요.</p>
-      <button class="button" onclick="makePayment()">💰 0.01π 테스트 결제</button>
-    </div>
-  </div>
+  <section id="flower">
+    <h2>🌸 꽃 도감</h2>
+    <p>꽃말, 생일꽃, 이미지로 꽃을 만나보세요.</p>
+  </section>
 
+  <section id="diary">
+    <h2>✍️ 감성 일기</h2>
+    <p>감정을 기록하고 나만의 시를 만들어보세요.</p>
+  </section>
+
+  <section id="garden">
+    <h2>👤 내 정원</h2>
+    <p>내가 저장한 꽃, 시, 일기를 한눈에 보기</p>
+  </section>
+
+  <nav>
+    <a href="#home">홈</a>
+    <a href="#poetry">시집</a>
+    <a href="#flower">꽃도감</a>
+    <a href="#diary">일기</a>
+    <a href="#garden">정원</a>
+  </nav>
+
+  <!-- Pi Network SDK -->
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
     Pi.init({ version: "2.0" });
@@ -115,29 +113,31 @@
         Pi.createPayment(
           {
             amount: 0.01,
-            memo: "파이 감성정원 테스트 결제",
+            memo: "감성정원 테스트 결제",
             metadata: { type: "test" }
           },
           {
             onReadyForServerApproval: function(paymentId) {
               console.log("결제 승인 요청:", paymentId);
+              alert("서버 승인 단계입니다. 아직 연결되지 않았습니다.");
             },
             onReadyForServerCompletion: function(paymentId, txid) {
               console.log("결제 완료 처리 준비:", paymentId, txid);
+              alert("결제 완료 처리 준비 단계입니다.");
             },
             onCancel: function(paymentId) {
-              console.log("결제 취소됨:", paymentId);
+              console.log("결제 취소:", paymentId);
               alert("결제가 취소되었습니다.");
             },
             onError: function(error, payment) {
-              console.error("결제 중 오류 발생:", error);
-              alert("결제 오류: " + error);
+              console.error("결제 오류:", error);
+              alert("결제 오류 발생: " + error);
             }
           }
         );
       } catch (error) {
         console.error("인증 실패:", error);
-        alert("인증 실패: " + error);
+        alert("Pi 인증 실패: " + error);
       }
     }
   </script>
