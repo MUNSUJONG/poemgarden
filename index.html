@@ -1,21 +1,40 @@
-<script src="https://sdk.minepi.com/pi-sdk.js"></script> <!-- ① Pi SDK -->
-<script>
-  Pi.init({ version: "2.0" });                             <!-- ② 반드시 init 먼저 -->
-  
-  async function makePayment() {
-    const scopes = ['username', 'payments'];
-    const user = await Pi.authenticate(scopes, (payload) => {
-      console.log(payload);
-    });
+<!-- Pi Network SDK 불러오기 -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
-    await Pi.createPayment(                               <!-- ③ createPayment는 마지막 -->
-      { amount: 0.01, memo: "테스트", metadata: { type: "test" } },
-      {
-        onReadyForServerApproval: paymentId => {},
-        onReadyForServerCompletion: (paymentId, txid) => {},
-        onCancel: paymentId => {},
-        onError: (error, payment) => {},
-      }
-    );
+<script>
+  // Pi SDK 초기화
+  Pi.init({ version: "2.0" });
+
+  async function makePayment() {
+    try {
+      const scopes = ['username', 'payments'];
+      const user = await Pi.authenticate(scopes, (payload) => {
+        console.log('User info:', payload);
+      });
+
+      Pi.createPayment(
+        {
+          amount: 0.01,
+          memo: "파이 감성정원 테스트 결제",
+          metadata: { type: "test" }
+        },
+        {
+          onReadyForServerApproval: function(paymentId) {
+            console.log('서버 승인 준비됨:', paymentId);
+          },
+          onReadyForServerCompletion: function(paymentId, txid) {
+            console.log('서버 완료 준비됨:', paymentId, txid);
+          },
+          onCancel: function(paymentId) {
+            console.log('결제 취소됨:', paymentId);
+          },
+          onError: function(error, payment) {
+            console.error('결제 에러:', error, payment);
+          }
+        }
+      );
+    } catch (error) {
+      console.error('인증 실패:', error);
+    }
   }
 </script>
