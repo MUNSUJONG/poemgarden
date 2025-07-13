@@ -1,40 +1,61 @@
-<!-- Pi Network SDK 불러오기 -->
-<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>파이 감성정원</title>
+</head>
+<body style="background-color: #f9f3f3; text-align: center; padding: 50px; font-family: sans-serif;">
+  <h1 style="color: #c2185b;">🌸 파이 감성정원 🌸</h1>
+  <p>0.01π 테스트 결제를 진행해보세요.</p>
+  <button onclick="makePayment()" style="padding: 10px 20px; font-size: 16px; background-color: #e91e63; color: white; border: none; border-radius: 5px;">
+    테스트 결제
+  </button>
 
-<script>
-  // Pi SDK 초기화
-  Pi.init({ version: "2.0" });
+  <!-- Pi Network SDK 로드 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
-  async function makePayment() {
-    try {
-      const scopes = ['username', 'payments'];
-      const user = await Pi.authenticate(scopes, (payload) => {
-        console.log('User info:', payload);
-      });
+  <script>
+    // SDK 초기화 (가장 먼저 실행)
+    Pi.init({ version: "2.0" });
 
-      Pi.createPayment(
-        {
-          amount: 0.01,
-          memo: "파이 감성정원 테스트 결제",
-          metadata: { type: "test" }
-        },
-        {
-          onReadyForServerApproval: function(paymentId) {
-            console.log('서버 승인 준비됨:', paymentId);
+    async function makePayment() {
+      try {
+        const scopes = ['username', 'payments'];
+        const user = await Pi.authenticate(scopes, (payload) => {
+          console.log('User info:', payload);
+        });
+
+        Pi.createPayment(
+          {
+            amount: 0.01,
+            memo: "파이 감성정원 테스트 결제",
+            metadata: { type: "test" }
           },
-          onReadyForServerCompletion: function(paymentId, txid) {
-            console.log('서버 완료 준비됨:', paymentId, txid);
-          },
-          onCancel: function(paymentId) {
-            console.log('결제 취소됨:', paymentId);
-          },
-          onError: function(error, payment) {
-            console.error('결제 에러:', error, payment);
+          {
+            onReadyForServerApproval: function(paymentId) {
+              console.log("결제 승인 요청:", paymentId);
+              // 여기에 백엔드 승인 처리 API 요청 가능
+            },
+            onReadyForServerCompletion: function(paymentId, txid) {
+              console.log("결제 완료 처리 준비:", paymentId, txid);
+              // 여기에 결제 완료 처리 API 요청 가능
+            },
+            onCancel: function(paymentId) {
+              console.log("결제 취소됨:", paymentId);
+              alert("결제가 취소되었습니다.");
+            },
+            onError: function(error, payment) {
+              console.error("결제 중 오류 발생:", error);
+              alert("결제 중 오류 발생: " + error);
+            }
           }
-        }
-      );
-    } catch (error) {
-      console.error('인증 실패:', error);
+        );
+      } catch (error) {
+        console.error("인증 실패:", error);
+        alert("인증 실패: " + error);
+      }
     }
-  }
-</script>
+  </script>
+</body>
+</html>
