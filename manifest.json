@@ -1,0 +1,16 @@
+{
+  "name": "파이 감성정원",
+  "short_name": "감성정원",
+  "start_url": "https://poemgarden.netlify.app/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffdddd",
+  "description": "꽃과 시로 감정을 나누는 Pi 감성 커뮤니티",
+  "icons": [
+    {
+      "src": "https://poemgarden.netlify.app/assets/logo.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ]
+}
