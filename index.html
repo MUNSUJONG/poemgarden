@@ -9,24 +9,19 @@
       font-family: 'Arial', sans-serif;
       text-align: center;
       background-color: #fff8f0;
-      margin: 0;
       padding: 50px;
     }
     h1 {
       color: #b30059;
-      font-size: 2em;
-    }
-    .flower {
-      font-size: 2em;
     }
     button {
       margin-top: 30px;
       padding: 12px 24px;
       font-size: 1em;
-      border: none;
-      border-radius: 8px;
       background-color: #ffc6d0;
       color: #70002d;
+      border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
     button:hover {
@@ -35,26 +30,31 @@
   </style>
 </head>
 <body>
-  <div class="flower">🌸</div>
-  <h1>환영합니다! 파이 감성정원입니다 🌸</h1>
+  <h1>🌸 파이 감성정원 🌸</h1>
+  <p>0.01π 테스트 결제를 진행해보세요.</p>
   <button onclick="makePayment()">💰 Pi 테스트 결제</button>
 
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
     Pi.init({ version: "2.0" });
 
-    function makePayment() {
-      Pi.createPayment({
-        amount: 0.01,
-        memo: "파이 감성정원 테스트 결제",
-        metadata: { app: "paipoemgarden" }
-      })
-      .then(function(payment) {
+    async function makePayment() {
+      try {
+        const scopes = ['username', 'payments'];
+        const user = await Pi.authenticate(scopes, function(payload) {
+          console.log("인증된 사용자:", payload);
+        });
+
+        const payment = await Pi.createPayment({
+          amount: 0.01,
+          memo: "파이 감성정원 테스트 결제",
+          metadata: { purpose: "test" }
+        });
+
         alert("결제 성공: " + JSON.stringify(payment));
-      })
-      .catch(function(error) {
-        alert("결제 실패: " + error);
-      });
+      } catch (error) {
+        alert("결제 실패 또는 취소됨: " + error);
+      }
     }
   </script>
 </body>
