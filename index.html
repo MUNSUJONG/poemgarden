@@ -16,8 +16,8 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <script>
-    // SDK 초기화 (테스트용 sandbox 활성화)
-    Pi.init({ version: "2.0", sandbox: true });
+    // SDK 초기화 (가장 먼저 실행)
+    Pi.init({ version: "2.0" });
 
     async function makePayment() {
       try {
@@ -26,8 +26,7 @@
           console.log('User info:', payload);
         });
 
-        // 🔹 createPayment 호출 시 await 필수
-        const payment = await Pi.createPayment(
+        Pi.createPayment(
           {
             amount: 0.01,
             memo: "파이 감성정원 테스트 결제",
@@ -35,28 +34,26 @@
           },
           {
             onReadyForServerApproval: function(paymentId) {
-              console.log("✅ 결제 승인 요청:", paymentId);
+              console.log("결제 승인 요청:", paymentId);
+              // 여기에 백엔드 승인 처리 API 요청 가능
             },
             onReadyForServerCompletion: function(paymentId, txid) {
-              console.log("✅ 결제 완료 준비:", paymentId, txid);
+              console.log("결제 완료 처리 준비:", paymentId, txid);
+              // 여기에 결제 완료 처리 API 요청 가능
             },
             onCancel: function(paymentId) {
-              console.log("❌ 결제 취소됨:", paymentId);
+              console.log("결제 취소됨:", paymentId);
               alert("결제가 취소되었습니다.");
             },
             onError: function(error, payment) {
-              console.error("🚫 결제 오류:", error);
-              alert("결제 중 오류 발생: " + error.message);
+              console.error("결제 중 오류 발생:", error);
+              alert("결제 중 오류 발생: " + error);
             }
           }
         );
-
-        // ✅ 결제 승인창 띄우는 핵심 호출
-        await payment.approve();
-
       } catch (error) {
         console.error("인증 실패:", error);
-        alert("인증 실패: " + error.message);
+        alert("인증 실패: " + error);
       }
     }
   </script>
