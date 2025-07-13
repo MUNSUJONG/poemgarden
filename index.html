@@ -17,7 +17,7 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <script>
-    // SDK 초기화 - sandbox 모드로
+    // SDK 초기화 (테스트 모드로 설정)
     Pi.init({ version: "2.0", sandbox: true });
 
     async function makePayment() {
@@ -51,7 +51,9 @@
           }
         );
 
-        await payment.approve();  // ✨ 실제 결제 승인창을 띄우는 핵심
+        // ✅ 결제 승인창 띄우는 핵심 단계
+        await payment.approve();
+
       } catch (error) {
         console.error("인증 실패:", error);
         alert("인증 실패: " + error.message);
