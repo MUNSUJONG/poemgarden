@@ -16,46 +16,51 @@
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <script>
-    // SDK 초기화 (가장 먼저 실행)
-    Pi.init({ version: "2.0" });
-
-    async function makePayment() {
-      try {
-        const scopes = ['username', 'payments'];
-        const user = await Pi.authenticate(scopes, (payload) => {
-          console.log('User info:', payload);
-        });
-
-        Pi.createPayment(
-          {
-            amount: 0.01,
-            memo: "파이 감성정원 테스트 결제",
-            metadata: { type: "test" }
-          },
-          {
-            onReadyForServerApproval: function(paymentId) {
-              console.log("결제 승인 요청:", paymentId);
-              // 여기에 백엔드 승인 처리 API 요청 가능
-            },
-            onReadyForServerCompletion: function(paymentId, txid) {
-              console.log("결제 완료 처리 준비:", paymentId, txid);
-              // 여기에 결제 완료 처리 API 요청 가능
-            },
-            onCancel: function(paymentId) {
-              console.log("결제 취소됨:", paymentId);
-              alert("결제가 취소되었습니다.");
-            },
-            onError: function(error, payment) {
-              console.error("결제 중 오류 발생:", error);
-              alert("결제 중 오류 발생: " + error);
-            }
-          }
-        );
-      } catch (error) {
-        console.error("인증 실패:", error);
-        alert("인증 실패: " + error);
+    // 페이지가 완전히 로드된 후 실행
+    window.addEventListener('load', function() {
+      if (typeof Pi === 'undefined') {
+        alert("Pi SDK가 로드되지 않았습니다.");
+        return;
       }
-    }
+
+      Pi.init({ version: "2.0" });
+
+      window.makePayment = async function () {
+        try {
+          const scopes = ['username', 'payments'];
+          const user = await Pi.authenticate(scopes, function(payload) {
+            console.log('사용자 인증 성공:', payload);
+          });
+
+          Pi.createPayment(
+            {
+              amount: 0.01,
+              memo: "파이 감성정원 테스트 결제",
+              metadata: { type: "test" }
+            },
+            {
+              onReadyForServerApproval: function(paymentId) {
+                console.log("서버 승인 준비:", paymentId);
+              },
+              onReadyForServerCompletion: function(paymentId, txid) {
+                console.log("서버 결제 완료 준비:", paymentId, txid);
+              },
+              onCancel: function(paymentId) {
+                console.log("결제 취소됨:", paymentId);
+                alert("결제가 취소되었습니다.");
+              },
+              onError: function(error, payment) {
+                console.error("결제 오류:", error);
+                alert("결제 오류: " + error);
+              }
+            }
+          );
+        } catch (error) {
+          console.error("인증 실패:", error);
+          alert("인증 실패: " + error);
+        }
+      };
+    });
   </script>
 </body>
 </html>
