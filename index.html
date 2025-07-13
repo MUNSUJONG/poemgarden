@@ -1,54 +1,65 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-  <title>Pi 결제 테스트</title>
   <meta charset="UTF-8" />
-  <script defer src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>파이 감성정원</title>
 </head>
-<body>
-  <h1>🌸 감성정원 테스트 결제</h1>
-  <button id="payBtn">테스트 결제하기</button>
+<body style="background-color: #f9f3f3; text-align: center; padding: 50px; font-family: sans-serif;">
+  <h1 style="color: #c2185b;">🌸 파이 감성정원 🌸</h1>
+  <p>0.01π 테스트 결제를 진행해보세요.</p>
+  <button onclick="makePayment()" style="padding: 10px 20px; font-size: 16px; background-color: #e91e63; color: white; border: none; border-radius: 5px;">
+    테스트 결제
+  </button>
+
+  <!-- Pi Network SDK 로드 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
   <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      try {
-        const Pi = window.Pi;
-        await Pi.init({
-          version: "2.0",
-          sandbox: true  // 테스트 결제용
-        });
+    // 페이지가 완전히 로드된 후 실행
+    window.addEventListener('load', function() {
+      if (typeof Pi === 'undefined') {
+        alert("Pi SDK가 로드되지 않았습니다.");
+        return;
+      }
 
-        document.getElementById("payBtn").addEventListener("click", async () => {
-          alert("🔔 결제 시작!");
+      Pi.init({ version: "2.0" });
 
-          const payment = await Pi.createPayment(
+      window.makePayment = async function () {
+        try {
+          const scopes = ['username', 'payments'];
+          const user = await Pi.authenticate(scopes, function(payload) {
+            console.log('사용자 인증 성공:', payload);
+          });
+
+          Pi.createPayment(
             {
               amount: 0.01,
-              memo: "감성정원 테스트 결제",
-              metadata: { note: "test" }
+              memo: "파이 감성정원 테스트 결제",
+              metadata: { type: "test" }
             },
             {
-              onReadyForServerApproval: (paymentId) => {
-                console.log("승인 대기:", paymentId);
+              onReadyForServerApproval: function(paymentId) {
+                console.log("서버 승인 준비:", paymentId);
               },
-              onReadyForServerCompletion: (paymentId, txid) => {
-                console.log("완료 대기:", paymentId, txid);
+              onReadyForServerCompletion: function(paymentId, txid) {
+                console.log("서버 결제 완료 준비:", paymentId, txid);
               },
-              onCancel: (paymentId) => {
-                alert("❌ 결제 취소됨");
+              onCancel: function(paymentId) {
+                console.log("결제 취소됨:", paymentId);
+                alert("결제가 취소되었습니다.");
               },
-              onError: (error) => {
-                alert("🚫 오류 발생: " + error.message);
+              onError: function(error, payment) {
+                console.error("결제 오류:", error);
+                alert("결제 오류: " + error);
               }
             }
           );
-
-          await payment.approve();
-        });
-      } catch (err) {
-        alert("🚨 Pi SDK 초기화 실패: " + err.message);
-      }
+        } catch (error) {
+          console.error("인증 실패:", error);
+          alert("인증 실패: " + error);
+        }
+      };
     });
   </script>
 </body>
