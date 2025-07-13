@@ -4,19 +4,105 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>파이 감성정원</title>
+  <style>
+    body {
+      background-color: #fef6f9;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      text-align: center;
+      background: linear-gradient(to right, #f8bbd0, #f48fb1);
+      padding: 20px 10px;
+      color: white;
+    }
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .heart {
+      font-size: 20px;
+      margin-top: 5px;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    .emotion-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 20px auto;
+      max-width: 400px;
+    }
+    .emotion {
+      padding: 15px;
+      border-radius: 10px;
+      background-color: #fff0f6;
+      border: 1px solid #f48fb1;
+      cursor: pointer;
+    }
+    .section {
+      margin: 30px 0;
+      padding: 15px;
+      background-color: #fff8fb;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .button {
+      background-color: #e91e63;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+  </style>
 </head>
-<body style="background-color: #f9f3f3; text-align: center; padding: 50px; font-family: sans-serif;">
-  <h1 style="color: #c2185b;">🌸 파이 감성정원 🌸</h1>
-  <p>0.01π 테스트 결제를 진행해보세요.</p>
-  <button onclick="makePayment()" style="padding: 10px 20px; font-size: 16px; background-color: #e91e63; color: white; border: none; border-radius: 5px;">
-    테스트 결제
-  </button>
+<body>
+  <header>
+    <h1>🌸 파이 감성정원</h1>
+    <div class="heart">❤️ 42</div>
+  </header>
 
-  <!-- Pi Network SDK 로드 -->
+  <div class="container">
+    <div class="section">
+      <h2>오늘의 감정을 선택해주세요</h2>
+      <div class="emotion-grid">
+        <div class="emotion">😊 기쁨</div>
+        <div class="emotion">💓 설렘</div>
+        <div class="emotion">😌 평온</div>
+        <div class="emotion">😔 외로움</div>
+        <div class="emotion">🌟 희망</div>
+        <div class="emotion">🌙 그리움</div>
+        <div class="emotion">😢 우울</div>
+        <div class="emotion">🙏 감사</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>오늘의 감정 연결 (1일 1회)</h2>
+      <textarea placeholder="오늘 하루 어떠셨나요? 마음속 이야기를 들려주세요..." maxlength="300" rows="4" style="width: 90%; border-radius: 8px; border: 1px solid #ccc; padding: 10px;"></textarea>
+      <br/>
+      <button class="button">감정 연결하기</button>
+    </div>
+
+    <div class="section">
+      <h2>시집 만들기 & 결제</h2>
+      <p>아래 버튼을 눌러 감성 결제를 테스트해보세요.</p>
+      <button class="button" onclick="makePayment()">💰 0.01π 테스트 결제</button>
+    </div>
+  </div>
+
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-
   <script>
-    // SDK 초기화 (가장 먼저 실행)
     Pi.init({ version: "2.0" });
 
     async function makePayment() {
@@ -35,11 +121,9 @@
           {
             onReadyForServerApproval: function(paymentId) {
               console.log("결제 승인 요청:", paymentId);
-              // 여기에 백엔드 승인 처리 API 요청 가능
             },
             onReadyForServerCompletion: function(paymentId, txid) {
               console.log("결제 완료 처리 준비:", paymentId, txid);
-              // 여기에 결제 완료 처리 API 요청 가능
             },
             onCancel: function(paymentId) {
               console.log("결제 취소됨:", paymentId);
@@ -47,7 +131,7 @@
             },
             onError: function(error, payment) {
               console.error("결제 중 오류 발생:", error);
-              alert("결제 중 오류 발생: " + error);
+              alert("결제 오류: " + error);
             }
           }
         );
