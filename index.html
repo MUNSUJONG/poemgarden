@@ -1,36 +1,33 @@
-async function makePayment() {
-  try {
-    const scopes = ['username', 'payments'];
-    const user = await Pi.authenticate(scopes, function(payload) {
-      console.log("인증된 사용자:", payload);
-    });
+<script>
+  async function makePayment() {
+    try {
+      const scopes = ['username', 'payments'];
+      const user = await Pi.authenticate(scopes, function(payload) {
+        console.log("인증된 사용자:", payload);
+      });
 
-    const payment = await Pi.createPayment({
-      amount: 0.01,
-      memo: "파이 감성정원 테스트 결제",
-      metadata: { purpose: "test" }
-    }, {
-      // 필수 콜백 함수들
-      onReadyForServerApproval: function(paymentId) {
-        console.log("✅ 서버 승인 준비 완료:", paymentId);
-        // 서버에 paymentId 전송 또는 로그 저장 가능
-      },
-      onReadyForServerCompletion: function(paymentId, txid) {
-        console.log("🎉 결제 완료 준비됨:", paymentId, txid);
-        // 서버에서 결제 완료 처리 가능
-      },
-      onCancel: function(paymentId) {
-        alert("❌ 사용자가 결제를 취소했습니다.");
-      },
-      onError: function(error, payment) {
-        alert("⚠️ 결제 중 오류 발생: " + error);
-        console.error(error);
-      }
-    });
+      const payment = await Pi.createPayment({
+        amount: 0.01,
+        memo: "파이 감성정원 테스트 결제",
+        metadata: { purpose: "test" }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          console.log("✅ 서버 승인 준비 완료:", paymentId);
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          console.log("🎉 결제 완료 준비됨:", paymentId, txid);
+        },
+        onCancel: function(paymentId) {
+          alert("❌ 사용자가 결제를 취소했습니다.");
+        },
+        onError: function(error, payment) {
+          alert("⚠️ 결제 중 오류 발생: " + error);
+        }
+      });
 
-    console.log("최종 결제 결과:", payment);
-  } catch (error) {
-    alert("결제 실패 또는 취소됨: " + error);
-    console.error(error);
+      console.log("최종 결제 결과:", payment);
+    } catch (error) {
+      alert("결제 실패 또는 취소됨: " + error);
+    }
   }
-}
+</script>
