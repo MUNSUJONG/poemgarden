@@ -1,24 +1,28 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>🌸 파이 감성정원 – 로그인 테스트</title>
-</head>
-<body style="text-align:center;padding:40px;font-family:sans-serif;">
-  <h1>🌸 파이 감성정원</h1>
-  <button onclick="loginWithPi()">🔐 Pi 로그인</button>
+function login() {
+  Pi.authenticate(['username'], (res) => {
+    alert("로그인 성공: " + JSON.stringify(res));
+  }, (err) => {
+    alert("로그인 실패: " + err);
+  });
+}
 
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>
-    window.addEventListener("load", () => {
-      if (!window.Pi) {
-        alert("❗ Pi SDK 로드 실패 - Pi 브라우저에서만 사용 가능합니다.");
-        return;
-      }
-
-      Pi.init({ version: "2.0", sandbox: true });
-
-      window.loginWithPi = function() {
-        Pi.authenticate(['username'], function(authResult) {
-          alert("🎉 로그인 성공: " + JSON.stringify(authResult));
-        }, function(err
+function pay() {
+  Pi.createPayment({
+    amount: 0.01,
+    memo: "감성 메시지 결제",
+    metadata: {type: "message", content: "테스트 결제입니다"}
+  }, {
+    onReadyForServerApproval: (paymentId) => {
+      alert("서버 승인 필요: " + paymentId);
+    },
+    onReadyForServerCompletion: (paymentId, txid) => {
+      alert("결제 완료! TXID: " + txid);
+    },
+    onCancel: (paymentId) => {
+      alert("결제 취소: " + paymentId);
+    },
+    onError: (err, paymentId) => {
+      alert("결제 실패: " + err);
+    }
+  });
+}
