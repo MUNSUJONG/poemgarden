@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌸 파이 감성정원 – Pi 결제 연동</title>
+  <title>🌸 파이 감성정원 – 테스트 결제</title>
   <style>
     body {
       background-color: #fffafc;
@@ -43,34 +42,34 @@
 </head>
 <body>
   <h1>🌸 파이 감성정원 🌸</h1>
-  <p>감성 메시지를 <strong>Pi 코인</strong>으로 결제해보세요</p>
+  <p>Pi 브라우저에서 테스트 로그인/결제를 해보세요</p>
 
   <button id="loginBtn">🔐 Pi 로그인</button>
-  <button id="payBtn">🪙 감성 메시지 결제 (0.01π)</button>
+  <button id="payBtn">🪙 감성 결제 0.01π</button>
 
   <div class="notice">
-    ※ 이 기능은 <strong>Pi 브라우저 또는 샌드박스</strong>에서만 작동합니다.<br>
-    일반 브라우저에서는 작동하지 않습니다.
+    ⚠️ 이 기능은 반드시 <strong>Pi 브라우저 + sandbox URL</strong> 환경에서만 작동합니다.
   </div>
 
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    window.addEventListener("load", () => {
+    document.addEventListener("DOMContentLoaded", () => {
       if (!window.Pi) {
-        alert("⚠️ Pi SDK가 로드되지 않았습니다.\nPi 브라우저 또는 샌드박스로 접속해주세요.");
+        alert("❗ Pi SDK가 감지되지 않았습니다. Pi 브라우저에서 sandbox 주소로 접속했는지 확인하세요.");
         return;
       }
 
+      // SDK 초기화
       Pi.init({
         version: "2.0",
-        sandbox: true  // 메인넷이면 false로 변경
+        sandbox: true
       });
 
       document.getElementById("loginBtn").addEventListener("click", () => {
         Pi.authenticate(['username'], (authResult) => {
-          alert("🎉 로그인 성공!\n" + JSON.stringify(authResult));
+          alert("✅ 로그인 성공: " + JSON.stringify(authResult));
         }, (error) => {
-          alert("❌ 로그인 실패\n" + error);
+          alert("❌ 로그인 실패: " + error);
         });
       });
 
@@ -78,19 +77,19 @@
         Pi.createPayment({
           amount: 0.01,
           memo: "감성 메시지 결제",
-          metadata: { type: "message", content: "🌸 감성 정원 메시지" },
+          metadata: { type: "message", content: "🌸 감성 메시지" },
         }, {
           onReadyForServerApproval: (paymentId) => {
-            alert("🔄 서버 승인 대기 중\nPayment ID: " + paymentId);
+            alert("🔄 승인 대기: " + paymentId);
           },
           onReadyForServerCompletion: (paymentId, txid) => {
             alert("✅ 결제 완료!\nTXID: " + txid);
           },
           onCancel: (paymentId) => {
-            alert("🚫 결제 취소됨\n" + paymentId);
+            alert("🚫 결제 취소");
           },
           onError: (error, paymentId) => {
-            alert("⚠️ 결제 실패\n" + error);
+            alert("❌ 결제 실패: " + error);
           }
         });
       });
