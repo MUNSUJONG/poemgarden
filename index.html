@@ -11,7 +11,7 @@
       padding: 30px;
       color: #333;
     }
-    .intro-box {
+    .intro-box, .section-box {
       background-color: #fff;
       padding: 25px;
       margin-bottom: 30px;
@@ -19,17 +19,6 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       font-size: 17px;
       line-height: 1.8;
-    }
-    .intro-box em {
-      color: #c2185b;
-      font-weight: bold;
-    }
-    .section-box {
-      background-color: #fffefe;
-      padding: 20px;
-      margin-top: 30px;
-      border-left: 5px solid #e91e63;
-      border-radius: 10px;
     }
     .main-button {
       padding: 12px 24px;
@@ -91,7 +80,7 @@
   </div>
 
   <script>
-    // 🌸 오늘의 꽃 추천
+    // 🌸 365일 꽃 데이터 일부 예시
     const flowerData = {
       "07-17": {
         flower: "능소화",
@@ -109,22 +98,23 @@
       const today = new Date();
       const key = String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
       const data = flowerData[key];
-
       if (data) {
         document.getElementById('flowerName').textContent = `꽃: ${data.flower}`;
         document.getElementById('flowerMeaning').textContent = `꽃말: ${data.meaning}`;
         document.getElementById('flowerPoem').innerHTML = data.poem;
       } else {
-        document.getElementById('flowerName').textContent = "꽃 정보가 준비되지 않았습니다.";
+        document.getElementById('flowerName').textContent = "🌸 꽃 정보가 아직 준비되지 않았습니다.";
       }
     }
 
-    // 💬 감성 메시지
+    // 💬 감성 메시지 랜덤
     const messages = [
       "오늘 당신의 마음에도 작은 꽃이 피길 바라요.",
       "조용히 피어난 감정이, 오늘 하루를 바꿔줄 거예요.",
       "당신은 충분히 아름답습니다. 잊지 마세요.",
-      "가장 따뜻한 감성은, 나눌 때 완성됩니다."
+      "가장 따뜻한 감성은, 나눌 때 완성됩니다.",
+      "숨겨둔 감정을 정원에 심어보세요.",
+      "오늘의 당신은 누구보다 특별해요."
     ];
 
     function showEmotionMessage() {
@@ -132,11 +122,16 @@
       document.getElementById("emotionMessage").textContent = messages[rand];
     }
 
-    // 💳 결제 테스트 함수
+    // 💳 결제 함수
     function makePayment() {
-      alert("결제 기능은 Pi 테스트 브라우저에서만 작동합니다.");
-      // 여기에 Pi SDK 결제 로직을 연결할 수 있음
+      alert("📢 Pi 테스트 결제 기능은 Pi 브라우저에서만 작동합니다.\n로그인 후 테스트를 진행해주세요.");
+      // 실제 Pi SDK 연동 가능 (테스트넷 연결 예정)
     }
+
+    // 🔔 감성 메시지 예약 팝업
+    setTimeout(() => {
+      alert("🌷 감성 메시지 도착!\n\n오늘도 당신은 충분히 빛나고 있습니다.");
+    }, 15000); // 15초 후 자동 팝업
 
     window.onload = function() {
       showTodayFlower();
