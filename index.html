@@ -1,21 +1,34 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>파이 감성정원 – 관리자 대시보드</title>
+  <title>파이 감성정원 – 통합버전</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f1ff; margin: 0; padding: 20px; }
-    header, footer { text-align: center; padding: 15px; }
-    h1 { color: #512da8; }
+    body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fefcf7; margin: 0; padding: 20px; }
+    h1, h2 { color: #c2185b; text-align: center; }
     .section {
-      background: #ede7f6;
-      padding: 20px;
-      margin: 20px auto;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff0f5;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    label, select, button {
+      display: block;
+      width: 100%;
+      margin-top: 10px;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #ec407a;
+      color: white;
+      border: none;
+      cursor: pointer;
     }
     table {
       width: 100%;
@@ -23,31 +36,32 @@
       margin-top: 10px;
     }
     th, td {
-      padding: 10px;
+      padding: 8px;
       text-align: left;
       border-bottom: 1px solid #ccc;
     }
-    th { background: #d1c4e9; }
-    .button {
-      background-color: #673ab7;
-      color: white;
-      padding: 10px 15px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    th { background: #f8bbd0; }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>📊 관리자 대시보드 – 파이 감성정원</h1>
-  <p>사용 통계, 수익, 결제 데이터 확인</p>
-</header>
+<h1>🌸 파이 감성정원 – 통합 대시보드 🌸</h1>
 
 <div class="section">
-  <h2>👥 사용자 활동 통계</h2>
+  <h2>🎙️ 감성 음성 낭송</h2>
+  <label for="emotion">감정을 선택하세요:</label>
+  <select id="emotion">
+    <option value="comfort">위로</option>
+    <option value="love">사랑</option>
+    <option value="courage">용기</option>
+    <option value="gratitude">고마움</option>
+    <option value="cheer">응원</option>
+  </select>
+  <button onclick="playEmotion()">감성 낭송 시작</button>
+</div>
+
+<div class="section">
+  <h2>📊 관리자 대시보드</h2>
   <table>
     <tr><th>항목</th><th>수치</th></tr>
     <tr><td>총 방문자</td><td id="visitors">0</td></tr>
@@ -55,7 +69,7 @@
     <tr><td>감정 선택 수</td><td id="emotions">0</td></tr>
     <tr><td>NFT 구매 수</td><td id="nfts">0</td></tr>
   </table>
-  <button class="button" onclick="simulateActivity()">통계 시뮬레이션</button>
+  <button onclick="simulateActivity()">통계 시뮬레이션</button>
 </div>
 
 <div class="section">
@@ -63,7 +77,7 @@
   <table>
     <tr><th>항목</th><th>금액 (π)</th></tr>
     <tr><td>NFT 판매 수익</td><td id="nftEarnings">0.00</td></tr>
-    <tr><td>기타 감정 아이템</td><td id="itemEarnings">0.00</td></tr>
+    <tr><td>감정 아이템 수익</td><td id="itemEarnings">0.00</td></tr>
     <tr><td><strong>총합</strong></td><td id="totalEarnings">0.00</td></tr>
   </table>
 </div>
@@ -75,24 +89,58 @@
   </ul>
 </div>
 
-<footer>
-  <p>&copy; 2025 Pi 감성정원 | 관리자 시스템</p>
-</footer>
-
 <script>
-  let visitorCount = 378;
-  let alarmCount = 143;
-  let emotionCount = 287;
-  let nftCount = 19;
-  let nftEarning = 0.95;
-  let itemEarning = 0.24;
+  const messages = {
+    comfort: [
+      "오늘도 수고했어요. 당신은 충분히 잘하고 있어요.",
+      "힘든 하루였죠? 이젠 편히 쉬어요.",
+      "당신의 슬픔은 언젠가 빛으로 바뀔 거예요."
+    ],
+    love: [
+      "당신은 누군가에게 소중한 사람이에요.",
+      "사랑해요. 당신의 존재는 빛나요.",
+      "내 마음속엔 항상 당신이 있어요."
+    ],
+    courage: [
+      "포기하지 마세요. 당신에겐 해낼 힘이 있어요.",
+      "작은 걸음이 모여 큰 변화가 돼요.",
+      "두려움은 당신의 용기를 더 빛나게 해요."
+    ],
+    gratitude: [
+      "오늘도 함께 해줘서 고마워요.",
+      "당신의 마음에 감사해요.",
+      "작은 배려가 큰 울림이 되었어요."
+    ],
+    cheer: [
+      "당신이라면 분명 잘 해낼 거예요!",
+      "파이팅! 모든 순간이 당신을 응원해요.",
+      "지금 이 순간도 당신 편이에요!"
+    ]
+  };
+
+  function playEmotion() {
+    const selected = document.getElementById("emotion").value;
+    const lines = messages[selected];
+    const msg = new SpeechSynthesisUtterance();
+    msg.text = lines[Math.floor(Math.random() * lines.length)];
+    msg.lang = "ko-KR";
+    msg.pitch = 1.1;
+    msg.rate = 0.95;
+    speechSynthesis.speak(msg);
+  }
 
   function simulateActivity() {
+    const visitorCount = 442;
+    const alarmCount = 158;
+    const emotionCount = 324;
+    const nftCount = 23;
+    const nftEarning = 1.12;
+    const itemEarning = 0.38;
+
     document.getElementById("visitors").innerText = visitorCount;
     document.getElementById("alarms").innerText = alarmCount;
     document.getElementById("emotions").innerText = emotionCount;
     document.getElementById("nfts").innerText = nftCount;
-
     document.getElementById("nftEarnings").innerText = nftEarning.toFixed(2);
     document.getElementById("itemEarnings").innerText = itemEarning.toFixed(2);
     document.getElementById("totalEarnings").innerText = (nftEarning + itemEarning).toFixed(2);
