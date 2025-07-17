@@ -1,21 +1,22 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>파이 감성정원 – 통합버전</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>파이 감성정원 – 전체 통합</title>
   <style>
     body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fefcf7; margin: 0; padding: 20px; }
-    h1, h2 { color: #c2185b; text-align: center; }
+    h1, h2 { color: #880e4f; text-align: center; }
     .section {
-      max-width: 800px;
+      max-width: 900px;
       margin: 30px auto;
       padding: 20px;
-      background: #fff0f5;
-      border-radius: 14px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: #fff5f8;
+      border-radius: 12px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
     }
-    label, select, button {
+    label, select, input, button {
       display: block;
       width: 100%;
       margin-top: 10px;
@@ -41,11 +42,31 @@
       border-bottom: 1px solid #ccc;
     }
     th { background: #f8bbd0; }
+    .flower-img {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 200px;
+      border-radius: 10px;
+    }
+    .poem-box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
 
-<h1>🌸 파이 감성정원 – 통합 대시보드 🌸</h1>
+<h1>🌸 파이 감성정원 – 전체 통합 시스템</h1>
+
+<div class="section">
+  <h2>🌼 오늘의 꽃 & 감성 시</h2>
+  <h3 id="flowerName">🌸 오늘의 꽃</h3>
+  <img id="flowerImage" class="flower-img" src="" alt="오늘의 꽃 이미지">
+  <div class="poem-box" id="flowerPoem">꽃과 시를 불러오는 중입니다...</div>
+</div>
 
 <div class="section">
   <h2>🎙️ 감성 음성 낭송</h2>
@@ -58,6 +79,14 @@
     <option value="cheer">응원</option>
   </select>
   <button onclick="playEmotion()">감성 낭송 시작</button>
+</div>
+
+<div class="section">
+  <h2>⏰ 감성 메시지 예약</h2>
+  <label for="alarmTime">알림 시간을 설정하세요:</label>
+  <input type="time" id="alarmTime">
+  <button onclick="scheduleAlarm()">감성 메시지 예약</button>
+  <p id="alarmStatus">예약된 메시지 없음</p>
 </div>
 
 <div class="section">
@@ -90,6 +119,29 @@
 </div>
 
 <script>
+  const flowerData = [
+    {
+      name: "나팔꽃",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Ipomoea_nil_1.jpg/800px-Ipomoea_nil_1.jpg",
+      poem: `새벽 안개 속에서\n살며시 피어난 너는\n세상에서 가장 조용한 용기.\n\n햇살이 닿자 부드럽게 말하듯 피고\n바람이 불면 마음도 따라 흔들려.\n\n너는 하루를 여는 인사처럼\n누군가에게 첫 미소가 되어준다.`
+    },
+    {
+      name: "능소화",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Campsis_grandiflora1.jpg/640px-Campsis_grandiflora1.jpg",
+      poem: `담장을 넘어\n오랜 기다림 끝에 피어난 꽃,\n그대는 마치 그리움의 형상.\n\n낮은 곳에서 위로 뻗어 올라가는 줄기처럼\n당신의 사랑도 조용히 퍼져가요.\n\n능소화는 말이 없지만\n그 색으로 마음을 흔들죠.`
+    },
+    {
+      name: "도라지꽃",
+      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Platycodon_grandiflorus1.jpg/800px-Platycodon_grandiflorus1.jpg",
+      poem: `별처럼 생긴 꽃잎 사이로\n소리를 담아두는 듯한 모습\n\n언제 불러도 맑은 음색처럼\n도라지는 마음을 울려요.\n\n산길 따라 걷다 마주친 너\n문득 지나간 시간을 떠오르게 해요.`
+    }
+  ];
+  const todayIndex = new Date().getDate() % flowerData.length;
+  const today = flowerData[todayIndex];
+  document.getElementById("flowerName").innerText = `🌸 오늘의 꽃: ${today.name}`;
+  document.getElementById("flowerImage").src = today.image;
+  document.getElementById("flowerPoem").innerText = today.poem;
+
   const messages = {
     comfort: [
       "오늘도 수고했어요. 당신은 충분히 잘하고 있어요.",
@@ -127,6 +179,27 @@
     msg.pitch = 1.1;
     msg.rate = 0.95;
     speechSynthesis.speak(msg);
+  }
+
+  function scheduleAlarm() {
+    const alarmTime = document.getElementById("alarmTime").value;
+    const status = document.getElementById("alarmStatus");
+    if (!alarmTime) {
+      status.innerText = "시간을 설정해주세요.";
+      return;
+    }
+    const now = new Date();
+    const [hour, minute] = alarmTime.split(":").map(Number);
+    const alarmDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
+    const diff = alarmDate - now;
+    if (diff <= 0) {
+      status.innerText = "설정한 시간은 이미 지났어요.";
+      return;
+    }
+    status.innerText = `⏰ ${alarmTime}에 감성 메시지가 도착합니다.`;
+    setTimeout(() => {
+      playEmotion();
+    }, diff);
   }
 
   function simulateActivity() {
