@@ -1,107 +1,108 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원 – 감정 알람 & 낭송 확장</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>파이 감성정원 – 관리자 대시보드</title>
   <style>
-    body { font-family: 'Arial', sans-serif; background: #fdfbf8; margin: 0; padding: 20px; color: #333; }
-    header, footer { text-align: center; padding: 10px; }
-    h1 { color: #6a1b9a; }
+    body { font-family: Arial, sans-serif; background: #f4f1ff; margin: 0; padding: 20px; }
+    header, footer { text-align: center; padding: 15px; }
+    h1 { color: #512da8; }
     .section {
-      background: #f3e5f5;
+      background: #ede7f6;
       padding: 20px;
-      margin: 15px 0;
+      margin: 20px auto;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-width: 800px;
     }
-    .button {
-      background: #8e24aa;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    select, input[type="time"] {
-      padding: 6px;
+    table {
+      width: 100%;
+      border-collapse: collapse;
       margin-top: 10px;
     }
-    #alarmMessage { margin-top: 10px; font-weight: bold; color: #4a148c; }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+    th { background: #d1c4e9; }
+    .button {
+      background-color: #673ab7;
+      color: white;
+      padding: 10px 15px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🌸 파이 감성정원 – 감정 알람 + 낭송 + 감성지도</h1>
-  <p>감정을 기록하고 나누는 따뜻한 공간</p>
+  <h1>📊 관리자 대시보드 – 파이 감성정원</h1>
+  <p>사용 통계, 수익, 결제 데이터 확인</p>
 </header>
 
 <div class="section">
-  <h2>🔔 감성 메시지 알람 예약</h2>
-  <label>알람 받을 시간 선택:</label><br>
-  <input type="time" id="alarmTime" />
-  <button class="button" onclick="setAlarm()">알람 설정</button>
-  <p id="alarmMessage">아직 알람이 설정되지 않았습니다.</p>
+  <h2>👥 사용자 활동 통계</h2>
+  <table>
+    <tr><th>항목</th><th>수치</th></tr>
+    <tr><td>총 방문자</td><td id="visitors">0</td></tr>
+    <tr><td>감성 메시지 예약 수</td><td id="alarms">0</td></tr>
+    <tr><td>감정 선택 수</td><td id="emotions">0</td></tr>
+    <tr><td>NFT 구매 수</td><td id="nfts">0</td></tr>
+  </table>
+  <button class="button" onclick="simulateActivity()">통계 시뮬레이션</button>
 </div>
 
 <div class="section">
-  <h2>🗺️ 감정 지도 (시각화 기초)</h2>
-  <p>지금 느끼는 감정을 선택하세요:</p>
-  <select id="emotionSelect">
-    <option value="">-- 감정 선택 --</option>
-    <option value="행복">행복 😊</option>
-    <option value="슬픔">슬픔 😢</option>
-    <option value="설렘">설렘 💓</option>
-    <option value="외로움">외로움 🌧️</option>
-    <option value="사랑">사랑 ❤️</option>
-  </select>
-  <button class="button" onclick="updateEmotion()">지도에 반영</button>
-  <p id="emotionMap">감정이 지도에 표시됩니다.</p>
+  <h2>💰 수익 요약</h2>
+  <table>
+    <tr><th>항목</th><th>금액 (π)</th></tr>
+    <tr><td>NFT 판매 수익</td><td id="nftEarnings">0.00</td></tr>
+    <tr><td>기타 감정 아이템</td><td id="itemEarnings">0.00</td></tr>
+    <tr><td><strong>총합</strong></td><td id="totalEarnings">0.00</td></tr>
+  </table>
 </div>
 
 <div class="section">
-  <h2>🎙️ 감성 음성 낭송</h2>
-  <p>감성적인 문장을 음성으로 들려드립니다.</p>
-  <button class="button" onclick="narrate()">낭송 시작</button>
+  <h2>🧾 최근 결제 내역</h2>
+  <ul id="paymentList">
+    <li>결제 내역 없음</li>
+  </ul>
 </div>
 
 <footer>
-  <p>&copy; 2025 Pi 감성정원 | 감정과 함께하는 하루</p>
+  <p>&copy; 2025 Pi 감성정원 | 관리자 시스템</p>
 </footer>
 
 <script>
-  let alarmSet = false;
-  function setAlarm() {
-    const alarmTime = document.getElementById("alarmTime").value;
-    if (!alarmTime) return alert("시간을 선택해주세요.");
-    alarmSet = true;
-    document.getElementById("alarmMessage").innerText = `알람이 설정되었습니다: ${alarmTime}`;
-    checkAlarm(alarmTime);
-  }
+  let visitorCount = 378;
+  let alarmCount = 143;
+  let emotionCount = 287;
+  let nftCount = 19;
+  let nftEarning = 0.95;
+  let itemEarning = 0.24;
 
-  function checkAlarm(time) {
-    setInterval(() => {
-      const now = new Date();
-      const current = now.toTimeString().slice(0,5);
-      if (alarmSet && current === time) {
-        alert("🌸 오늘의 감성 메시지: '오늘도 당신의 감정은 소중합니다.'");
-        alarmSet = false;
-      }
-    }, 10000);
-  }
+  function simulateActivity() {
+    document.getElementById("visitors").innerText = visitorCount;
+    document.getElementById("alarms").innerText = alarmCount;
+    document.getElementById("emotions").innerText = emotionCount;
+    document.getElementById("nfts").innerText = nftCount;
 
-  function updateEmotion() {
-    const selected = document.getElementById("emotionSelect").value;
-    if (!selected) return alert("감정을 선택해주세요.");
-    document.getElementById("emotionMap").innerText = `🗺️ 현재 감정 지도 상태: ${selected}`;
-  }
+    document.getElementById("nftEarnings").innerText = nftEarning.toFixed(2);
+    document.getElementById("itemEarnings").innerText = itemEarning.toFixed(2);
+    document.getElementById("totalEarnings").innerText = (nftEarning + itemEarning).toFixed(2);
 
-  function narrate() {
-    const msg = new SpeechSynthesisUtterance("오늘도 당신의 마음이 따뜻하길 바랍니다.");
-    msg.lang = "ko-KR";
-    window.speechSynthesis.speak(msg);
+    const paymentList = document.getElementById("paymentList");
+    paymentList.innerHTML = "";
+    ["0.05π - NFT 카드", "0.02π - 감성 알람", "0.03π - 감정 배경"].forEach(item => {
+      const li = document.createElement("li");
+      li.innerText = item;
+      paymentList.appendChild(li);
+    });
   }
 </script>
 
