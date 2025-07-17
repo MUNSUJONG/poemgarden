@@ -1,31 +1,35 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>🌸 파이 감성정원 – Pi 결제 연동</title>
+  <meta charset="UTF-8">
+  <title>파이 감성정원</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 </head>
-<body style="background-color: #f9f3f3; text-align: center; padding: 50px; font-family: sans-serif;">
-  <h1 style="color: #c2185b;">🌸 파이 감성정원 – Pi 결제 연동</h1>
+<body>
+  <h1>🌸 파이 감성정원 – Pi 결제 연동 🌸</h1>
   <p>아래 버튼을 눌러 Pi 계정으로 로그인하고, 감성 메시지를 결제해보세요.</p>
 
-  <button onclick="loginWithPi()" style="padding: 10px 20px; font-size: 16px; background-color: #ec407a; color: white; border: none; border-radius: 5px; margin: 10px;">🔐 Pi 로그인</button>
-  <button onclick="makePayment()" style="padding: 10px 20px; font-size: 16px; background-color: #ab47bc; color: white; border: none; border-radius: 5px; margin: 10px;">💰 0.01π 결제 테스트</button>
+  <button onclick="loginWithPi()">🔐 Pi 로그인</button>
+  <button onclick="makePayment()">🪙 0.01π 결제 테스트</button>
 
-  <p style="margin-top: 30px; color: #888;">※ Pi 브라우저에서 직접 접속해야 버튼이 작동합니다.</p>
+  <p style="color:red;">※ 이 버튼은 Pi 브라우저에서만 작동합니다.</p>
 
+  <!-- ✅ 반드시 이 아래에 있어야 함 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    Pi.init({
-      version: "2.0",
-      sandbox: true  // ✅ 테스트 중이면 true, 실사용이면 false로 바꾸세요
+    document.addEventListener("DOMContentLoaded", function () {
+      Pi.init({
+        version: "2.0",
+        sandbox: true
+      });
     });
 
     function loginWithPi() {
       Pi.authenticate(['username'], function(authResult) {
-        alert("✅ 로그인 성공: " + JSON.stringify(authResult));
+        alert("로그인 성공: " + JSON.stringify(authResult));
       }, function(error) {
-        alert("❌ 로그인 실패: " + error);
+        alert("로그인 실패: " + error);
       });
     }
 
@@ -33,19 +37,19 @@
       Pi.createPayment({
         amount: 0.01,
         memo: "감성 메시지 결제",
-        metadata: { type: "message", content: "🌸 감성 정원 메시지" }
+        metadata: { type: "message", content: "🌸 감성 정원 메시지" },
       }, {
         onReadyForServerApproval: function(paymentId) {
-          alert("🔔 서버 승인 필요: " + paymentId);
+          alert("승인 필요: " + paymentId);
         },
         onReadyForServerCompletion: function(paymentId, txid) {
-          alert("🎉 결제 완료! TXID: " + txid);
+          alert("결제 완료! TXID: " + txid);
         },
         onCancel: function(paymentId) {
-          alert("🚫 결제 취소됨");
+          alert("결제 취소됨");
         },
         onError: function(error, paymentId) {
-          alert("⚠️ 결제 실패: " + error);
+          alert("결제 실패: " + error);
         }
       });
     }
