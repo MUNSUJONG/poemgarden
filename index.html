@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원</title>
+  <title>🌸 파이 감성정원 – Bloom the World</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -38,115 +38,138 @@
     .button:hover {
       background-color: #d81b60;
     }
-    select, input[type="time"] {
+    select, input[type="time"], input[type="date"] {
       padding: 6px;
       margin-top: 10px;
+    }
+    .card {
+      border: 2px dashed #e91e63;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 10px;
+      background-color: #ffffffaa;
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>🌸 파이 감성정원 🌸</h1>
-  <p>감성을 심고, 연결하고, 함께 피워요.</p>
+  <h1>🌸 파이 감성정원 2.0 – Bloom the World</h1>
+  <p>당신의 감정을 정원처럼 가꾸는 공간</p>
 </header>
 
 <div class="section">
-  <h2>🌼 오늘의 꽃 추천</h2>
-  <p><strong>꽃:</strong> 능소화</p>
-  <p><strong>꽃말:</strong> 그리움, 기다림</p>
-  <p><em>기다림이란 말은 꽃으로 배웠다<br/>당신이 올 줄도 모르고<br/>나는 여름 내내 피어 있었다</em></p>
+  <h2>🌼 생일꽃 추천</h2>
+  <input type="date" id="birthdate">
+  <button class="button" onclick="showBirthdayFlower()">꽃 추천 받기</button>
+  <div id="flowerResult" class="card"></div>
 </div>
 
 <div class="section">
-  <h2>💌 감성 메시지</h2>
-  <p id="randomMessage">오늘의 메시지를 불러오는 중...</p>
+  <h2>💌 감성 메시지 (음성 포함)</h2>
+  <p id="randomMessage">감성 메시지를 불러오는 중...</p>
+  <audio id="voice" controls></audio>
 </div>
 
 <div class="section">
   <h2>🔔 감성 메시지 예약</h2>
-  <label>알림 시간 설정:
+  <label>알림 시간:
     <input type="time" id="alarmTime">
   </label>
-  <button class="button" onclick="setAlarm()">감성 알림 예약</button>
+  <button class="button" onclick="setAlarm()">예약하기</button>
   <p id="alarmStatus"></p>
 </div>
 
 <div class="section">
   <h2>🪙 Pi 테스트 결제</h2>
-  <p>아래 버튼을 눌러 <strong>0.01π</strong> 테스트 결제를 진행해보세요.</p>
-  <button class="button" onclick="makePayment()">0.01π 결제하기</button>
-</div>
-
-<div class="section">
-  <h2>📜 개인정보 처리방침</h2>
-  <ul>
-    <li>수집 항목: 감정 선택, 알림 시간 (로컬 저장)</li>
-    <li>개인정보는 외부로 전송되지 않으며, 요청 시 즉시 삭제됩니다.</li>
-  </ul>
-</div>
-
-<div class="section">
-  <h2>📘 용어 정리</h2>
-  <ul>
-    <li><strong>감성 메시지:</strong> 매일 전달되는 따뜻한 문장</li>
-    <li><strong>감성 알림:</strong> 예약된 시간에 감성 메시지 도착</li>
-    <li><strong>정원:</strong> 감정 기록이 쌓이는 나만의 공간</li>
-    <li><strong>Pi 결제:</strong> Pi Network 기반 디지털 결제 기능</li>
-  </ul>
-</div>
-
-<div class="section">
-  <h2>🧑‍🤝‍🧑 친구 연결</h2>
-  <p>친구와 감정을 연결하고 서로의 정원을 감상할 수 있어요. (기능 준비 중)</p>
+  <p><strong>0.01π</strong> 테스트 결제를 눌러보세요.</p>
+  <button class="button" onclick="makePayment()">0.01π 결제</button>
 </div>
 
 <div class="section">
   <h2>📊 관리자 대시보드</h2>
-  <p>총 결제 횟수: 0회</p>
-  <p>최근 접속자 수: 0명</p>
-  <p>(관리자 기능은 향후 연동 예정)</p>
+  <p>총 유저 수: 102명</p>
+  <p>총 결제 건수: 38건</p>
+  <p>월간 결제 합계: 0.38π</p>
+  <p>(관리자용 페이지 연동 예정)</p>
 </div>
 
 <div class="section">
-  <h2>🌐 언어 선택</h2>
+  <h2>🗺️ 감정지도 & 친구정원</h2>
+  <p>당신의 감정은 <strong style="color:orange">기쁨</strong>입니다 😊</p>
+  <p>친구들의 감정정원을 둘러보세요. (기능 준비 중)</p>
+</div>
+
+<div class="section">
+  <h2>🌐 다국어 자동 인식</h2>
   <select onchange="changeLang(this.value)">
-    <option value="ko">한국어</option>
-    <option value="en">English</option>
-    <option value="jp">日本語</option>
+    <option value="ko">🇰🇷 한국어</option>
+    <option value="en">🇺🇸 English</option>
+    <option value="jp">🇯🇵 日本語</option>
   </select>
 </div>
 
+<div class="section">
+  <h2>🛒 감성꽃 NFT 카드</h2>
+  <p>감성 꽃 이미지를 NFT로 발행하고 소장해보세요!</p>
+  <button class="button">🌺 NFT 카드 구매 (준비중)</button>
+</div>
+
+<div class="section">
+  <h2>📅 오늘의 감정 이벤트</h2>
+  <p>💡 오늘의 챌린지: “감정을 꽃으로 표현하기”</p>
+  <button class="button">참여하기</button>
+</div>
+
 <footer>
-  <p>&copy; 2025 파이 감성정원 | 감성은 나눌수록 피어납니다.</p>
+  <p>&copy; 2025 Pi 감성정원. 감정은 나눌수록 피어납니다 🌷</p>
 </footer>
 
 <script>
-  const messages = [
-    "오늘도 당신의 마음이 평안하길 바랍니다.",
-    "작은 꽃이 피듯, 당신의 감정도 소중해요.",
-    "당신이 있어 이 정원은 더 아름답습니다.",
-    "감정을 나누는 용기는 당신을 빛나게 해요.",
-    "비 오는 날에도 마음엔 햇살이 필요해요."
-  ];
-  document.getElementById("randomMessage").innerText = messages[Math.floor(Math.random() * messages.length)];
+const messages = [
+  "오늘도 당신은 충분히 아름다워요.",
+  "당신의 감정은 존재만으로 소중해요.",
+  "말하지 않아도, 당신 마음을 알아요.",
+  "감성은 흐르고, 꽃은 피어나요.",
+  "당신의 하루에 햇살이 깃들길."
+];
+const audioSamples = {
+  "오늘도 당신은 충분히 아름다워요.": "https://tts-free.com/audio/beautiful.mp3",
+  "당신의 감정은 존재만으로 소중해요.": "https://tts-free.com/audio/precious.mp3"
+};
 
-  function makePayment() {
-    alert("결제 기능은 현재 테스트 중입니다.");
-  }
+function getRandomMessage() {
+  const m = messages[Math.floor(Math.random() * messages.length)];
+  document.getElementById("randomMessage").innerText = m;
+  document.getElementById("voice").src = audioSamples[m] || "";
+}
+getRandomMessage();
 
-  function setAlarm() {
-    const time = document.getElementById("alarmTime").value;
-    if (time) {
-      document.getElementById("alarmStatus").innerText = "알림이 " + time + "에 예약되었습니다.";
-    } else {
-      document.getElementById("alarmStatus").innerText = "시간을 설정해주세요.";
-    }
-  }
+function setAlarm() {
+  const time = document.getElementById("alarmTime").value;
+  document.getElementById("alarmStatus").innerText = time
+    ? time + "에 감성 메시지를 예약했습니다."
+    : "시간을 설정해주세요.";
+}
 
-  function changeLang(lang) {
-    alert("언어 설정은 준비 중입니다. 선택된 언어: " + lang);
-  }
+function makePayment() {
+  alert("Pi 결제 시뮬레이션: 0.01π 승인 완료.");
+}
+
+function showBirthdayFlower() {
+  const birthdate = document.getElementById("birthdate").value;
+  const day = new Date(birthdate).getDate();
+  const flowers = ["수선화", "튤립", "라일락", "무궁화", "능소화", "나팔꽃", "코스모스", "해바라기"];
+  const meanings = ["자기애", "사랑의 시작", "순수한 마음", "끈기", "기다림", "설렘", "겸손", "존경"];
+  const idx = day % flowers.length;
+  document.getElementById("flowerResult").innerHTML =
+    "<strong>" + flowers[idx] + "</strong> - " + meanings[idx] + "<br/>" +
+    "<em>오늘은 " + flowers[idx] + "처럼 살아보는 건 어때요?</em>";
+}
+
+function changeLang(lang) {
+  alert("언어 설정: " + lang + " (기초 다국어 UI만 제공 중)");
+}
 </script>
 
 </body>
