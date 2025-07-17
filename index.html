@@ -1,39 +1,24 @@
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>파이 감성정원</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-  <h1>🌸 파이 감성정원 – Pi 결제 연동 🌸</h1>
-  <p>아래 버튼을 눌러 Pi 계정으로 로그인하고, 감성 메시지를 결제해보세요.</p>
-
-  <button onclick="loginWithPi()">🔐 Pi 로그인</button>
-  <button onclick="makePayment()">🪙 0.01π 결제 테스트</button>
-
-  <p style="color:red;">※ 이 버튼은 Pi 브라우저에서만 작동합니다.</p>
-
-  <!-- ✅ 반드시 이 아래에 있어야 함 -->
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      Pi.init({
-        version: "2.0",
-        sandbox: true
-      });
+<!-- ⚠️ 반드시 body 아래에 있어야 함 -->
+<script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<script>
+  // 전체 DOM이 로딩된 후 SDK 초기화
+  document.addEventListener("DOMContentLoaded", function () {
+    Pi.init({
+      version: "2.0",
+      sandbox: true  // 테스트넷
     });
 
-    function loginWithPi() {
+    // 버튼이 SDK 초기화 이후에만 작동하게 연결
+    document.getElementById("loginBtn").onclick = function () {
       Pi.authenticate(['username'], function(authResult) {
         alert("로그인 성공: " + JSON.stringify(authResult));
       }, function(error) {
         alert("로그인 실패: " + error);
       });
-    }
+    };
 
-    function makePayment() {
+    document.getElementById("payBtn").onclick = function () {
       Pi.createPayment({
         amount: 0.01,
         memo: "감성 메시지 결제",
@@ -52,7 +37,6 @@
           alert("결제 실패: " + error);
         }
       });
-    }
-  </script>
-</body>
-</html>
+    };
+  });
+</script>
