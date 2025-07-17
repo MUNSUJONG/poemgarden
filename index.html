@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -11,7 +12,7 @@
       padding: 30px;
       color: #333;
     }
-    .intro-box, .section-box {
+    .section {
       background-color: #fff;
       padding: 25px;
       margin-bottom: 30px;
@@ -19,6 +20,9 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       font-size: 17px;
       line-height: 1.8;
+    }
+    h1, h2 {
+      color: #c2185b;
     }
     .main-button {
       padding: 12px 24px;
@@ -30,57 +34,58 @@
       cursor: pointer;
       margin-top: 10px;
     }
-    .footer-links {
-      font-size: 14px;
-      margin-top: 40px;
-    }
-    .footer-links a {
-      margin-right: 15px;
-      color: #888;
-      text-decoration: none;
-    }
-    .footer-links a:hover {
-      color: #e91e63;
-    }
   </style>
 </head>
 <body>
-  <h1 style="color: #c2185b;">🌸 파이 감성정원에 오신 것을 환영합니다</h1>
+  <h1>🌸 파이 감성정원에 오신 것을 환영합니다</h1>
 
-  <div class="intro-box">
+  <div class="section">
     파이 감성정원은 당신의 감정을 꽃과 시로 표현하고,<br/>
     감성적인 하루를 나만의 정원에 심어가는 특별한 공간입니다.<br/>
     감정을 선택하면 오늘의 꽃과 시가 피어나고,<br/>
     친구와 감정을 나누며 감성지도를 만들어갈 수 있습니다.<br/><br/>
-    <em>감성은 나눌수록 피어납니다.</em><br/>
-    <em>당신의 마음을 정원에 심어보세요.</em>
+    <em>감성은 나눌수록 피어납니다.<br/>당신의 마음을 정원에 심어보세요.</em>
   </div>
 
-  <div class="section-box">
+  <div class="section">
     <h2>🌼 오늘의 꽃 추천</h2>
     <p id="flowerName">꽃: 로딩 중...</p>
     <p id="flowerMeaning">꽃말: </p>
     <p id="flowerPoem" style="font-style: italic; color: #888;"></p>
   </div>
 
-  <div class="section-box">
+  <div class="section">
     <h2>📩 감성 메시지</h2>
     <p id="emotionMessage" style="font-weight: bold; color: #555;">감성 메시지를 불러오는 중...</p>
   </div>
 
-  <div class="section-box">
+  <div class="section">
     <h2>💳 Pi 테스트 결제</h2>
     <p>아래 버튼을 눌러 <strong>0.01π 테스트 결제</strong>를 진행해보세요.</p>
     <button class="main-button" onclick="makePayment()">0.01π 결제하기</button>
   </div>
 
-  <div class="footer-links">
-    📄 <a href="개인정보 보호.html" target="_blank">개인정보 처리방침</a>
-    📘 <a href="용어.html" target="_blank">용어 정리</a>
+  <div class="section">
+    <h2>📜 개인정보 처리방침</h2>
+    <ul>
+      <li>수집 항목: 이름, 감정 선택 (로컬 저장)</li>
+      <li>개인정보는 제3자에게 제공되지 않으며, 요청 시 즉시 삭제됩니다.</li>
+      <li>이 정책은 변경될 수 있으며 주요 변경 시 공지됩니다.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>📘 용어 정리</h2>
+    <ul>
+      <li><strong>감성 메시지:</strong> 하루를 위로하는 한 줄 문장</li>
+      <li><strong>오늘의 꽃:</strong> 날짜별 추천 꽃 + 시 구절</li>
+      <li><strong>정원:</strong> 감정 기록이 모이는 나만의 공간</li>
+      <li><strong>Pi 결제:</strong> Pi Network 기반 디지털 결제 기능</li>
+    </ul>
   </div>
 
   <script>
-    // 🌸 365일 꽃 데이터 일부 예시
+    // 🌸 꽃 추천
     const flowerData = {
       "07-17": {
         flower: "능소화",
@@ -103,7 +108,7 @@
         document.getElementById('flowerMeaning').textContent = `꽃말: ${data.meaning}`;
         document.getElementById('flowerPoem').innerHTML = data.poem;
       } else {
-        document.getElementById('flowerName').textContent = "🌸 꽃 정보가 아직 준비되지 않았습니다.";
+        document.getElementById('flowerName').textContent = "🌸 오늘의 꽃 정보가 준비되지 않았습니다.";
       }
     }
 
@@ -122,16 +127,15 @@
       document.getElementById("emotionMessage").textContent = messages[rand];
     }
 
-    // 💳 결제 함수
+    // 💳 Pi 결제 버튼
     function makePayment() {
-      alert("📢 Pi 테스트 결제 기능은 Pi 브라우저에서만 작동합니다.\n로그인 후 테스트를 진행해주세요.");
-      // 실제 Pi SDK 연동 가능 (테스트넷 연결 예정)
+      alert("📢 Pi 테스트 결제는 Pi Browser에서 작동합니다.");
     }
 
-    // 🔔 감성 메시지 예약 팝업
+    // 🔔 감성 예약 메시지 팝업
     setTimeout(() => {
       alert("🌷 감성 메시지 도착!\n\n오늘도 당신은 충분히 빛나고 있습니다.");
-    }, 15000); // 15초 후 자동 팝업
+    }, 15000);
 
     window.onload = function() {
       showTodayFlower();
