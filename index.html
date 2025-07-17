@@ -1,232 +1,77 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원 – 전체 통합</title>
+  <title>파이 감성정원 – 전체 통합 + Pi 결제</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
-    body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fefcf7; margin: 0; padding: 20px; }
-    h1, h2 { color: #880e4f; text-align: center; }
-    .section {
-      max-width: 900px;
-      margin: 30px auto;
-      padding: 20px;
-      background: #fff5f8;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-    label, select, input, button {
-      display: block;
-      width: 100%;
-      margin-top: 10px;
-      font-size: 16px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
+    body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fffafc; padding: 20px; text-align: center; }
+    h1 { color: #d81b60; }
     button {
+      padding: 12px 20px;
+      margin: 10px;
+      font-size: 16px;
       background: #ec407a;
       color: white;
       border: none;
+      border-radius: 8px;
       cursor: pointer;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-      border-bottom: 1px solid #ccc;
-    }
-    th { background: #f8bbd0; }
-    .flower-img {
-      display: block;
-      margin: 0 auto 20px;
-      max-width: 200px;
-      border-radius: 10px;
-    }
-    .poem-box {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      line-height: 1.8;
-      white-space: pre-wrap;
+    #paymentResult {
+      margin-top: 20px;
+      font-size: 18px;
+      color: green;
     }
   </style>
 </head>
 <body>
+  <h1>🌸 파이 감성정원 – Pi 결제 연동</h1>
 
-<h1>🌸 파이 감성정원 – 전체 통합 시스템</h1>
+  <p>아래 버튼을 눌러 Pi 계정으로 로그인하고, 감성 메시지를 결제해보세요.</p>
 
-<div class="section">
-  <h2>🌼 오늘의 꽃 & 감성 시</h2>
-  <h3 id="flowerName">🌸 오늘의 꽃</h3>
-  <img id="flowerImage" class="flower-img" src="" alt="오늘의 꽃 이미지">
-  <div class="poem-box" id="flowerPoem">꽃과 시를 불러오는 중입니다...</div>
-</div>
+  <button onclick="piLogin()">🔐 Pi 로그인</button>
+  <button onclick="makePayment()">💰 0.01π 결제 테스트</button>
 
-<div class="section">
-  <h2>🎙️ 감성 음성 낭송</h2>
-  <label for="emotion">감정을 선택하세요:</label>
-  <select id="emotion">
-    <option value="comfort">위로</option>
-    <option value="love">사랑</option>
-    <option value="courage">용기</option>
-    <option value="gratitude">고마움</option>
-    <option value="cheer">응원</option>
-  </select>
-  <button onclick="playEmotion()">감성 낭송 시작</button>
-</div>
+  <div id="paymentResult"></div>
 
-<div class="section">
-  <h2>⏰ 감성 메시지 예약</h2>
-  <label for="alarmTime">알림 시간을 설정하세요:</label>
-  <input type="time" id="alarmTime">
-  <button onclick="scheduleAlarm()">감성 메시지 예약</button>
-  <p id="alarmStatus">예약된 메시지 없음</p>
-</div>
+  <script>
+    // Pi SDK 초기화
+    const scopes = ['username', 'payments'];
+    const onIncompletePaymentFound = (payment) => {
+      console.log("미완료 결제 발견:", payment);
+    };
 
-<div class="section">
-  <h2>📊 관리자 대시보드</h2>
-  <table>
-    <tr><th>항목</th><th>수치</th></tr>
-    <tr><td>총 방문자</td><td id="visitors">0</td></tr>
-    <tr><td>감성 메시지 예약 수</td><td id="alarms">0</td></tr>
-    <tr><td>감정 선택 수</td><td id="emotions">0</td></tr>
-    <tr><td>NFT 구매 수</td><td id="nfts">0</td></tr>
-  </table>
-  <button onclick="simulateActivity()">통계 시뮬레이션</button>
-</div>
+    Pi.init({ version: "2.0", sandbox: true }); // sandbox 테스트 모드
 
-<div class="section">
-  <h2>💰 수익 요약</h2>
-  <table>
-    <tr><th>항목</th><th>금액 (π)</th></tr>
-    <tr><td>NFT 판매 수익</td><td id="nftEarnings">0.00</td></tr>
-    <tr><td>감정 아이템 수익</td><td id="itemEarnings">0.00</td></tr>
-    <tr><td><strong>총합</strong></td><td id="totalEarnings">0.00</td></tr>
-  </table>
-</div>
-
-<div class="section">
-  <h2>🧾 최근 결제 내역</h2>
-  <ul id="paymentList">
-    <li>결제 내역 없음</li>
-  </ul>
-</div>
-
-<script>
-  const flowerData = [
-    {
-      name: "나팔꽃",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Ipomoea_nil_1.jpg/800px-Ipomoea_nil_1.jpg",
-      poem: `새벽 안개 속에서\n살며시 피어난 너는\n세상에서 가장 조용한 용기.\n\n햇살이 닿자 부드럽게 말하듯 피고\n바람이 불면 마음도 따라 흔들려.\n\n너는 하루를 여는 인사처럼\n누군가에게 첫 미소가 되어준다.`
-    },
-    {
-      name: "능소화",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Campsis_grandiflora1.jpg/640px-Campsis_grandiflora1.jpg",
-      poem: `담장을 넘어\n오랜 기다림 끝에 피어난 꽃,\n그대는 마치 그리움의 형상.\n\n낮은 곳에서 위로 뻗어 올라가는 줄기처럼\n당신의 사랑도 조용히 퍼져가요.\n\n능소화는 말이 없지만\n그 색으로 마음을 흔들죠.`
-    },
-    {
-      name: "도라지꽃",
-      image: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Platycodon_grandiflorus1.jpg/800px-Platycodon_grandiflorus1.jpg",
-      poem: `별처럼 생긴 꽃잎 사이로\n소리를 담아두는 듯한 모습\n\n언제 불러도 맑은 음색처럼\n도라지는 마음을 울려요.\n\n산길 따라 걷다 마주친 너\n문득 지나간 시간을 떠오르게 해요.`
+    function piLogin() {
+      Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
+        alert("로그인 성공! 사용자: " + auth.user.username);
+      }).catch(function(error) {
+        alert("로그인 실패: " + error);
+      });
     }
-  ];
-  const todayIndex = new Date().getDate() % flowerData.length;
-  const today = flowerData[todayIndex];
-  document.getElementById("flowerName").innerText = `🌸 오늘의 꽃: ${today.name}`;
-  document.getElementById("flowerImage").src = today.image;
-  document.getElementById("flowerPoem").innerText = today.poem;
 
-  const messages = {
-    comfort: [
-      "오늘도 수고했어요. 당신은 충분히 잘하고 있어요.",
-      "힘든 하루였죠? 이젠 편히 쉬어요.",
-      "당신의 슬픔은 언젠가 빛으로 바뀔 거예요."
-    ],
-    love: [
-      "당신은 누군가에게 소중한 사람이에요.",
-      "사랑해요. 당신의 존재는 빛나요.",
-      "내 마음속엔 항상 당신이 있어요."
-    ],
-    courage: [
-      "포기하지 마세요. 당신에겐 해낼 힘이 있어요.",
-      "작은 걸음이 모여 큰 변화가 돼요.",
-      "두려움은 당신의 용기를 더 빛나게 해요."
-    ],
-    gratitude: [
-      "오늘도 함께 해줘서 고마워요.",
-      "당신의 마음에 감사해요.",
-      "작은 배려가 큰 울림이 되었어요."
-    ],
-    cheer: [
-      "당신이라면 분명 잘 해낼 거예요!",
-      "파이팅! 모든 순간이 당신을 응원해요.",
-      "지금 이 순간도 당신 편이에요!"
-    ]
-  };
-
-  function playEmotion() {
-    const selected = document.getElementById("emotion").value;
-    const lines = messages[selected];
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = lines[Math.floor(Math.random() * lines.length)];
-    msg.lang = "ko-KR";
-    msg.pitch = 1.1;
-    msg.rate = 0.95;
-    speechSynthesis.speak(msg);
-  }
-
-  function scheduleAlarm() {
-    const alarmTime = document.getElementById("alarmTime").value;
-    const status = document.getElementById("alarmStatus");
-    if (!alarmTime) {
-      status.innerText = "시간을 설정해주세요.";
-      return;
+    function makePayment() {
+      Pi.createPayment({
+        amount: 0.01,
+        memo: "감성 메시지 구매",
+        metadata: { type: "emotion_msg", value: "comfort" }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          document.getElementById("paymentResult").innerText = "✅ 승인 대기 중: " + paymentId;
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          document.getElementById("paymentResult").innerText = "🎉 결제 성공! 트랜잭션 ID: " + txid;
+        },
+        onCancel: function(paymentId) {
+          document.getElementById("paymentResult").innerText = "❌ 사용자가 결제를 취소했습니다.";
+        },
+        onError: function(error, payment) {
+          document.getElementById("paymentResult").innerText = "⚠️ 결제 오류 발생: " + error;
+        }
+      });
     }
-    const now = new Date();
-    const [hour, minute] = alarmTime.split(":").map(Number);
-    const alarmDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hour, minute);
-    const diff = alarmDate - now;
-    if (diff <= 0) {
-      status.innerText = "설정한 시간은 이미 지났어요.";
-      return;
-    }
-    status.innerText = `⏰ ${alarmTime}에 감성 메시지가 도착합니다.`;
-    setTimeout(() => {
-      playEmotion();
-    }, diff);
-  }
-
-  function simulateActivity() {
-    const visitorCount = 442;
-    const alarmCount = 158;
-    const emotionCount = 324;
-    const nftCount = 23;
-    const nftEarning = 1.12;
-    const itemEarning = 0.38;
-
-    document.getElementById("visitors").innerText = visitorCount;
-    document.getElementById("alarms").innerText = alarmCount;
-    document.getElementById("emotions").innerText = emotionCount;
-    document.getElementById("nfts").innerText = nftCount;
-    document.getElementById("nftEarnings").innerText = nftEarning.toFixed(2);
-    document.getElementById("itemEarnings").innerText = itemEarning.toFixed(2);
-    document.getElementById("totalEarnings").innerText = (nftEarning + itemEarning).toFixed(2);
-
-    const paymentList = document.getElementById("paymentList");
-    paymentList.innerHTML = "";
-    ["0.05π - NFT 카드", "0.02π - 감성 알람", "0.03π - 감정 배경"].forEach(item => {
-      const li = document.createElement("li");
-      li.innerText = item;
-      paymentList.appendChild(li);
-    });
-  }
-</script>
-
+  </script>
 </body>
 </html>
