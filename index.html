@@ -3,142 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원 2.0 – Bloom the World</title>
+  <title>🌸 파이 감성정원</title>
   <style>
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #fff9f9;
-      color: #444;
-      margin: 0;
-      padding: 0;
+      background-color: #fdf6f9;
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 30px;
+      color: #333;
     }
-    header {
-      background-color: #ffe4ec;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    .intro-box {
+      background-color: #fff;
+      padding: 25px;
+      margin-bottom: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      font-size: 17px;
+      line-height: 1.8;
     }
-    header h1 {
-      color: #d81b60;
-      margin: 0;
-    }
-    nav {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #fce4ec;
-      display: flex;
-      justify-content: space-around;
-      padding: 10px 0;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-    }
-    nav a {
-      text-decoration: none;
-      color: #d81b60;
+    .intro-box em {
+      color: #c2185b;
       font-weight: bold;
     }
-    section {
-      padding: 20px;
-      max-width: 768px;
-      margin: auto;
-    }
-    .btn {
-      background-color: #ec407a;
-      color: white;
+    .main-button {
       padding: 12px 24px;
+      font-size: 16px;
+      background-color: #e91e63;
+      color: white;
       border: none;
       border-radius: 8px;
-      font-size: 16px;
       cursor: pointer;
-      margin-top: 20px;
+      margin-bottom: 20px;
     }
-    .btn:hover {
-      background-color: #d81b60;
+    .footer-links {
+      font-size: 14px;
+      margin-top: 30px;
+    }
+    .footer-links a {
+      margin-right: 15px;
+      color: #888;
+      text-decoration: none;
+    }
+    .footer-links a:hover {
+      color: #e91e63;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🌸 파이 감성정원 2.0 🌸</h1>
-    <p>오늘의 꽃과 감성시를 만나보세요</p>
-  </header>
+  <h1 style="color: #c2185b;">🌸 파이 감성정원에 오신 것을 환영합니다</h1>
 
-  <section id="home">
-    <h2>🏠 홈</h2>
-    <p>오늘의 꽃: 🌼 해바라기</p>
-    <p>오늘의 시: “너를 바라보면, 꽃이 핀다”</p>
-    <button class="btn" onclick="makePayment()">0.01π 테스트 결제</button>
-  </section>
+  <div class="intro-box">
+    <p>
+      파이 감성정원은 당신의 감정을 꽃과 시로 표현하고,<br/>
+      감성적인 하루를 나만의 정원에 심어가는 특별한 공간입니다.<br/>
+      감정을 선택하면 오늘의 꽃과 시가 피어나고,<br/>
+      친구와 감정을 나누며 감성지도를 만들어갈 수 있습니다.
+    </p>
+    <p>
+      <em>감성은 나눌수록 피어납니다.</em><br/>
+      <em>당신의 마음을 정원에 심어보세요.</em>
+    </p>
+  </div>
 
-  <section id="poetry">
-    <h2>📖 감성 시집</h2>
-    <p>감정별 / 꽃별 시를 탐색하고 공감해보세요.</p>
-  </section>
+  <p>👇 아래 버튼을 눌러 <strong>0.01π 테스트 결제</strong>를 진행해보세요.</p>
+  <button class="main-button" onclick="makePayment()">0.01π 결제하기</button>
 
-  <section id="flower">
-    <h2>🌸 꽃 도감</h2>
-    <p>꽃말, 생일꽃, 이미지로 꽃을 만나보세요.</p>
-  </section>
+  <div class="footer-links">
+    📄 <a href="개인정보 보호.html" target="_blank">개인정보 처리방침</a>
+    📘 <a href="용어.html" target="_blank">용어 정리</a>
+  </div>
 
-  <section id="diary">
-    <h2>✍️ 감성 일기</h2>
-    <p>감정을 기록하고 나만의 시를 만들어보세요.</p>
-  </section>
-
-  <section id="garden">
-    <h2>👤 내 정원</h2>
-    <p>내가 저장한 꽃, 시, 일기를 한눈에 보기</p>
-  </section>
-
-  <nav>
-    <a href="#home">홈</a>
-    <a href="#poetry">시집</a>
-    <a href="#flower">꽃도감</a>
-    <a href="#diary">일기</a>
-    <a href="#garden">정원</a>
-  </nav>
-
-  <!-- Pi Network SDK -->
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    Pi.init({ version: "2.0" });
-
-    async function makePayment() {
-      try {
-        const scopes = ['username', 'payments'];
-        const user = await Pi.authenticate(scopes, (payload) => {
-          console.log('User info:', payload);
-        });
-
-        Pi.createPayment(
-          {
-            amount: 0.01,
-            memo: "감성정원 테스트 결제",
-            metadata: { type: "test" }
-          },
-          {
-            onReadyForServerApproval: function(paymentId) {
-              console.log("결제 승인 요청:", paymentId);
-              alert("서버 승인 단계입니다. 아직 연결되지 않았습니다.");
-            },
-            onReadyForServerCompletion: function(paymentId, txid) {
-              console.log("결제 완료 처리 준비:", paymentId, txid);
-              alert("결제 완료 처리 준비 단계입니다.");
-            },
-            onCancel: function(paymentId) {
-              console.log("결제 취소:", paymentId);
-              alert("결제가 취소되었습니다.");
-            },
-            onError: function(error, payment) {
-              console.error("결제 오류:", error);
-              alert("결제 오류 발생: " + error);
-            }
-          }
-        );
-      } catch (error) {
-        console.error("인증 실패:", error);
-        alert("Pi 인증 실패: " + error);
-      }
+    function makePayment() {
+      alert("결제 기능은 Pi 테스트 브라우저에서 작동합니다.");
+      // 실제 Pi Network 결제 연동 코드는 여기에 연결됨
     }
   </script>
 </body>
