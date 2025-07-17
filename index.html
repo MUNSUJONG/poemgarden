@@ -1,28 +1,32 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>🌸 파이 감성정원</title>
+  <title>🌸 파이 감성정원 – 로그인 테스트</title>
 </head>
-<body>
-  <h2>🌸 파이 로그인 테스트 🌸</h2>
-  <button onclick="login()">🔐 로그인 시도</button>
+<body style="text-align:center;padding:40px;font-family:sans-serif;">
+  <h1>🌸 파이 감성정원</h1>
+  <button onclick="loginWithPi()">🔐 Pi 로그인</button>
 
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    if (!window.Pi) {
-      alert("⚠️ Pi SDK 미로드됨. Pi 브라우저에서만 작동합니다.");
-    } else {
-      Pi.init({ version: "2.0", sandbox: true });
-    }
+    window.addEventListener("load", () => {
+      if (!window.Pi) {
+        alert("❗ Pi SDK 로드 실패 - Pi 브라우저에서만 사용 가능합니다.");
+        return;
+      }
 
-    function login() {
-      Pi.authenticate(['username'], function(auth) {
-        alert("🎉 로그인 성공:\n" + JSON.stringify(auth));
-      }, function(error) {
-        alert("❌ 로그인 실패: " + error);
-      });
-    }
+      Pi.init({ version: "2.0", sandbox: true });
+
+      window.loginWithPi = function() {
+        Pi.authenticate(['username'], function(authResult) {
+          alert("🎉 로그인 성공: " + JSON.stringify(authResult));
+        }, function(err) {
+          alert("❌ 로그인 실패: " + err);
+        });
+      }
+    });
   </script>
 </body>
 </html>
