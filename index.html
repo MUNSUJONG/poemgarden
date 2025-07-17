@@ -6,111 +6,148 @@
   <title>파이 감성정원</title>
   <style>
     body {
-      background-color: #fff5f5;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: 'Arial', sans-serif;
+      background-color: #fffafc;
       margin: 0;
-      padding: 30px;
+      padding: 20px;
       color: #333;
     }
+    header, footer {
+      text-align: center;
+      padding: 10px;
+    }
     h1 {
-      color: #d81b60;
-      font-size: 28px;
-      margin-bottom: 10px;
-    }
-    h2 {
-      font-size: 20px;
-      margin-top: 40px;
-      color: #2e7d32;
-    }
-    .section {
-      background: #fff0f0;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    .highlight {
-      font-weight: bold;
       color: #c2185b;
     }
-    button {
+    .section {
+      background-color: #fff0f5;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    .button {
       background-color: #e91e63;
-      color: white;
-      padding: 12px 24px;
-      font-size: 16px;
+      color: #fff;
       border: none;
+      padding: 12px 20px;
+      font-size: 16px;
       border-radius: 8px;
       cursor: pointer;
     }
-    button:hover {
+    .button:hover {
       background-color: #d81b60;
     }
-    .footer-links {
-      margin-top: 30px;
-      font-size: 14px;
-    }
-    .footer-links a {
-      color: #007BFF;
-      text-decoration: none;
-      margin-right: 20px;
+    select, input[type="time"] {
+      padding: 6px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>🌸 파이 감성정원에 오신 것을 환영합니다</h1>
-  <div class="section">
-    <p>파이 감성정원은 당신의 감정을 꽃과 시로 표현하고,</p>
-    <p>감성적인 하루를 나만의 정원에 심어가는 특별한 공간입니다.</p>
-    <p>감정을 선택하면 <strong>오늘의 꽃과 시가 피어나고</strong>,</p>
-    <p>친구와 감정을 나누며 <strong>감정지도를</strong> 만들어갈 수 있습니다.</p>
-    <br/>
-    <p class="highlight">감성은 나눌수록 피어납니다.<br/>당신의 마음을 정원에 심어보세요.</p>
-  </div>
 
-  <div class="section">
-    <h2>🌼 오늘의 꽃 추천</h2>
-    <p><strong>꽃:</strong> 능소화</p>
-    <p><strong>꽃말:</strong> 그리움, 기다림</p>
-    <p><em>기다림이란 말은 꽃으로 배웠다<br/>
-    당신이 올 줄도 모르고<br/>
-    나는 여름 내내 피어 있었다</em></p>
-  </div>
+<header>
+  <h1>🌸 파이 감성정원 🌸</h1>
+  <p>감성을 심고, 연결하고, 함께 피워요.</p>
+</header>
 
-  <div class="section">
-    <h2>📩 감성 메시지</h2>
-    <p>작은 감정도 피어난다면 큰 위로가 됩니다.</p>
-  </div>
+<div class="section">
+  <h2>🌼 오늘의 꽃 추천</h2>
+  <p><strong>꽃:</strong> 능소화</p>
+  <p><strong>꽃말:</strong> 그리움, 기다림</p>
+  <p><em>기다림이란 말은 꽃으로 배웠다<br/>당신이 올 줄도 모르고<br/>나는 여름 내내 피어 있었다</em></p>
+</div>
 
-  <div class="section">
-    <h2>🪙 Pi 테스트 결제</h2>
-    <p>아래 버튼을 눌러 <strong>0.01π</strong> 테스트 결제를 진행해보세요.</p>
-    <button onclick="makePayment()">0.01π 결제하기</button>
-  </div>
+<div class="section">
+  <h2>💌 감성 메시지</h2>
+  <p id="randomMessage">오늘의 메시지를 불러오는 중...</p>
+</div>
 
-  <div class="footer-links">
-    <a href="#privacy">📜 개인정보 처리방침</a>
-    <a href="#terms">📘 용어 정리</a>
-  </div>
+<div class="section">
+  <h2>🔔 감성 메시지 예약</h2>
+  <label>알림 시간 설정:
+    <input type="time" id="alarmTime">
+  </label>
+  <button class="button" onclick="setAlarm()">감성 알림 예약</button>
+  <p id="alarmStatus"></p>
+</div>
 
-  <div id="privacy" class="section">
-    <h2>📜 개인정보 처리방침</h2>
-    <p>• 수집 항목: 이름, 감정 선택 (로컬 저장)</p>
-    <p>• 개인정보는 제3자에게 제공되지 않으며, 요청 시 즉시 삭제됩니다.</p>
-    <p>• 이 정책은 변경될 수 있으며 주요 변경 시 공지됩니다.</p>
-  </div>
+<div class="section">
+  <h2>🪙 Pi 테스트 결제</h2>
+  <p>아래 버튼을 눌러 <strong>0.01π</strong> 테스트 결제를 진행해보세요.</p>
+  <button class="button" onclick="makePayment()">0.01π 결제하기</button>
+</div>
 
-  <div id="terms" class="section">
-    <h2>📘 용어 정리</h2>
-    <p>• <strong>감성 메시지:</strong> 하루를 위로하는 짧은 문장</p>
-    <p>• <strong>오늘의 꽃:</strong> 날짜별 추천 꽃과 시 감성 큐레이션</p>
-    <p>• <strong>정원:</strong> 감정 기록이 모이는 나만의 공간</p>
-    <p>• <strong>Pi 결제:</strong> Pi Network 기반 디지털 결제 기능</p>
-  </div>
+<div class="section">
+  <h2>📜 개인정보 처리방침</h2>
+  <ul>
+    <li>수집 항목: 감정 선택, 알림 시간 (로컬 저장)</li>
+    <li>개인정보는 외부로 전송되지 않으며, 요청 시 즉시 삭제됩니다.</li>
+  </ul>
+</div>
 
-  <script>
-    function makePayment() {
-      alert("Pi 결제 테스트 기능은 현재 데모 버전입니다.");
+<div class="section">
+  <h2>📘 용어 정리</h2>
+  <ul>
+    <li><strong>감성 메시지:</strong> 매일 전달되는 따뜻한 문장</li>
+    <li><strong>감성 알림:</strong> 예약된 시간에 감성 메시지 도착</li>
+    <li><strong>정원:</strong> 감정 기록이 쌓이는 나만의 공간</li>
+    <li><strong>Pi 결제:</strong> Pi Network 기반 디지털 결제 기능</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2>🧑‍🤝‍🧑 친구 연결</h2>
+  <p>친구와 감정을 연결하고 서로의 정원을 감상할 수 있어요. (기능 준비 중)</p>
+</div>
+
+<div class="section">
+  <h2>📊 관리자 대시보드</h2>
+  <p>총 결제 횟수: 0회</p>
+  <p>최근 접속자 수: 0명</p>
+  <p>(관리자 기능은 향후 연동 예정)</p>
+</div>
+
+<div class="section">
+  <h2>🌐 언어 선택</h2>
+  <select onchange="changeLang(this.value)">
+    <option value="ko">한국어</option>
+    <option value="en">English</option>
+    <option value="jp">日本語</option>
+  </select>
+</div>
+
+<footer>
+  <p>&copy; 2025 파이 감성정원 | 감성은 나눌수록 피어납니다.</p>
+</footer>
+
+<script>
+  const messages = [
+    "오늘도 당신의 마음이 평안하길 바랍니다.",
+    "작은 꽃이 피듯, 당신의 감정도 소중해요.",
+    "당신이 있어 이 정원은 더 아름답습니다.",
+    "감정을 나누는 용기는 당신을 빛나게 해요.",
+    "비 오는 날에도 마음엔 햇살이 필요해요."
+  ];
+  document.getElementById("randomMessage").innerText = messages[Math.floor(Math.random() * messages.length)];
+
+  function makePayment() {
+    alert("결제 기능은 현재 테스트 중입니다.");
+  }
+
+  function setAlarm() {
+    const time = document.getElementById("alarmTime").value;
+    if (time) {
+      document.getElementById("alarmStatus").innerText = "알림이 " + time + "에 예약되었습니다.";
+    } else {
+      document.getElementById("alarmStatus").innerText = "시간을 설정해주세요.";
     }
-  </script>
+  }
+
+  function changeLang(lang) {
+    alert("언어 설정은 준비 중입니다. 선택된 언어: " + lang);
+  }
+</script>
+
 </body>
 </html>
