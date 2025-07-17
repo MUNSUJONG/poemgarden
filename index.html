@@ -1,99 +1,65 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌸 파이 감성정원 – 테스트 결제</title>
-  <style>
-    body {
-      background-color: #fffafc;
-      text-align: center;
-      padding: 50px;
-      font-family: 'Arial', sans-serif;
-    }
-    h1 {
-      color: #c2185b;
-      font-size: 28px;
-      margin-bottom: 15px;
-    }
-    p {
-      font-size: 18px;
-      margin-bottom: 25px;
-    }
-    button {
-      padding: 12px 24px;
-      font-size: 16px;
-      margin: 8px;
-      background-color: #e91e63;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #d81b60;
-    }
-    .notice {
-      color: #990000;
-      font-size: 15px;
-      margin-top: 20px;
-    }
-  </style>
-</head>
-<body>
-  <h1>🌸 파이 감성정원 🌸</h1>
-  <p>Pi 브라우저에서 테스트 로그인/결제를 해보세요</p>
-
-  <button id="loginBtn">🔐 Pi 로그인</button>
-  <button id="payBtn">🪙 감성 결제 0.01π</button>
-
-  <div class="notice">
-    ⚠️ 이 기능은 반드시 <strong>Pi 브라우저 + sandbox URL</strong> 환경에서만 작동합니다.
-  </div>
-
+  <meta charset="UTF-8">
+  <title>🌸 파이 감성정원</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+</head>
+<body style="text-align: center; font-family: sans-serif; padding: 40px; background-color: #fef6f9;">
+  <h1 style="color: #c2185b;">🌸 파이 감성정원 🌸</h1>
+  <p style="font-size: 18px;">365일 꽃과 시로 감성을 나누는 공간</p>
+  <p style="margin-top: 20px;">0.01π 테스트 결제를 진행해보세요.</p>
+
+  <button onclick="loginWithPi()" style="padding:10px 20px; font-size:16px; background-color:#e91e63; color:white; border:none; border-radius:5px; margin: 10px;">
+    Pi 로그인
+  </button>
+
+  <button onclick="makePayment()" style="padding:10px 20px; font-size:16px; background-color:#8e24aa; color:white; border:none; border-radius:5px; margin: 10px;">
+    결제하기
+  </button>
+
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      if (!window.Pi) {
-        alert("❗ Pi SDK가 감지되지 않았습니다. Pi 브라우저에서 sandbox 주소로 접속했는지 확인하세요.");
-        return;
-      }
+    // 발급받은 API 키
+    const apiKey = "mbnjdhm5ulknihdfnzgm5r2ivdbqhug2uk7yr85jhxkyxyadpqlzh7jlitl4pn5y";
 
-      // SDK 초기화
-      Pi.init({
-        version: "2.0",
-        sandbox: true
-      });
-
-      document.getElementById("loginBtn").addEventListener("click", () => {
-        Pi.authenticate(['username'], (authResult) => {
-          alert("✅ 로그인 성공: " + JSON.stringify(authResult));
-        }, (error) => {
-          alert("❌ 로그인 실패: " + error);
-        });
-      });
-
-      document.getElementById("payBtn").addEventListener("click", () => {
-        Pi.createPayment({
-          amount: 0.01,
-          memo: "감성 메시지 결제",
-          metadata: { type: "message", content: "🌸 감성 메시지" },
-        }, {
-          onReadyForServerApproval: (paymentId) => {
-            alert("🔄 승인 대기: " + paymentId);
-          },
-          onReadyForServerCompletion: (paymentId, txid) => {
-            alert("✅ 결제 완료!\nTXID: " + txid);
-          },
-          onCancel: (paymentId) => {
-            alert("🚫 결제 취소");
-          },
-          onError: (error, paymentId) => {
-            alert("❌ 결제 실패: " + error);
-          }
-        });
-      });
+    // Pi SDK 초기화
+    Pi.init({
+      version: "2.0",
+      sandbox: true,
+      appId: apiKey
     });
+
+    // 로그인 함수
+    function loginWithPi() {
+      Pi.authenticate(['username'], function(authResult) {
+        alert("로그인 성공: " + JSON.stringify(authResult));
+      }, function(error) {
+        alert("로그인 실패: " + error);
+      });
+    }
+
+    // 결제 함수
+    function makePayment() {
+      Pi.createPayment({
+        amount: 0.01,
+        memo: "감성 메시지 결제",
+        metadata: { type: "message", content: "🌸 감성 정원 메시지" }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          alert("승인 요청 중: " + paymentId);
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("결제 완료! TXID: " + txid);
+        },
+        onCancel: function(paymentId) {
+          alert("사용자가 결제를 취소했습니다.");
+        },
+        onError: function(error, paymentId) {
+          alert("오류 발생: " + error);
+        }
+      });
+    }
   </script>
 </body>
 </html>
