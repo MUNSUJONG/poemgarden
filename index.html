@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,89 +7,90 @@
   <title>🌸 파이 감성정원 – Pi 결제 연동</title>
   <style>
     body {
-      background-color: #fff0f5;
+      background-color: #fffafc;
       text-align: center;
       padding: 50px;
       font-family: 'Arial', sans-serif;
     }
     h1 {
       color: #c2185b;
-      margin-bottom: 10px;
+      font-size: 28px;
+      margin-bottom: 15px;
     }
     p {
       font-size: 18px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
     button {
       padding: 12px 24px;
       font-size: 16px;
-      margin: 10px;
+      margin: 8px;
       background-color: #e91e63;
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
     }
     button:hover {
       background-color: #d81b60;
     }
     .notice {
-      color: red;
-      font-size: 14px;
+      color: #990000;
+      font-size: 15px;
       margin-top: 20px;
     }
   </style>
 </head>
 <body>
-  <h1>🌸 파이 감성정원 – Pi 결제 연동</h1>
-  <p>아래 버튼을 눌러 Pi 계정으로 로그인하고,<br>감성 메시지를 결제해보세요.</p>
+  <h1>🌸 파이 감성정원 🌸</h1>
+  <p>감성 메시지를 <strong>Pi 코인</strong>으로 결제해보세요</p>
 
   <button id="loginBtn">🔐 Pi 로그인</button>
-  <button id="payBtn">🪙 0.01π 결제 테스트</button>
+  <button id="payBtn">🪙 감성 메시지 결제 (0.01π)</button>
 
-  <div class="notice">※ 반드시 Pi 브라우저 또는 샌드박스에서 접속해야 버튼이 작동합니다.</div>
+  <div class="notice">
+    ※ 이 기능은 <strong>Pi 브라우저 또는 샌드박스</strong>에서만 작동합니다.<br>
+    일반 브라우저에서는 작동하지 않습니다.
+  </div>
 
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    window.addEventListener("load", function () {
+    window.addEventListener("load", () => {
       if (!window.Pi) {
-        alert("⚠️ Pi SDK가 로드되지 않았습니다. Pi 브라우저나 샌드박스에서만 작동합니다.");
+        alert("⚠️ Pi SDK가 로드되지 않았습니다.\nPi 브라우저 또는 샌드박스로 접속해주세요.");
         return;
       }
 
-      // Pi SDK 초기화
       Pi.init({
         version: "2.0",
-        sandbox: true  // 메인넷 전환 시 false로 변경
+        sandbox: true  // 메인넷이면 false로 변경
       });
 
-      // 로그인 버튼
-      document.getElementById("loginBtn").addEventListener("click", function () {
-        Pi.authenticate(['username'], function(authResult) {
+      document.getElementById("loginBtn").addEventListener("click", () => {
+        Pi.authenticate(['username'], (authResult) => {
           alert("🎉 로그인 성공!\n" + JSON.stringify(authResult));
-        }, function(error) {
+        }, (error) => {
           alert("❌ 로그인 실패\n" + error);
         });
       });
 
-      // 결제 버튼
-      document.getElementById("payBtn").addEventListener("click", function () {
+      document.getElementById("payBtn").addEventListener("click", () => {
         Pi.createPayment({
           amount: 0.01,
           memo: "감성 메시지 결제",
           metadata: { type: "message", content: "🌸 감성 정원 메시지" },
         }, {
-          onReadyForServerApproval: function(paymentId) {
-            alert("🔄 서버 승인 대기\n" + paymentId);
+          onReadyForServerApproval: (paymentId) => {
+            alert("🔄 서버 승인 대기 중\nPayment ID: " + paymentId);
           },
-          onReadyForServerCompletion: function(paymentId, txid) {
-            alert("✅ 결제 완료\nTXID: " + txid);
+          onReadyForServerCompletion: (paymentId, txid) => {
+            alert("✅ 결제 완료!\nTXID: " + txid);
           },
-          onCancel: function(paymentId) {
+          onCancel: (paymentId) => {
             alert("🚫 결제 취소됨\n" + paymentId);
           },
-          onError: function(error, paymentId) {
-            alert("⚠️ 결제 오류\n" + error);
+          onError: (error, paymentId) => {
+            alert("⚠️ 결제 실패\n" + error);
           }
         });
       });
