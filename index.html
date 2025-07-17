@@ -50,20 +50,28 @@
 
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    window.addEventListener("load", function () {
+      if (!window.Pi) {
+        alert("⚠️ Pi SDK가 로드되지 않았습니다. Pi 브라우저나 샌드박스에서만 작동합니다.");
+        return;
+      }
+
+      // Pi SDK 초기화
       Pi.init({
         version: "2.0",
-        sandbox: true  // ← 실제 출시 시 false로 변경
+        sandbox: true  // 메인넷 전환 시 false로 변경
       });
 
+      // 로그인 버튼
       document.getElementById("loginBtn").addEventListener("click", function () {
         Pi.authenticate(['username'], function(authResult) {
-          alert("로그인 성공 🎉\n" + JSON.stringify(authResult));
+          alert("🎉 로그인 성공!\n" + JSON.stringify(authResult));
         }, function(error) {
-          alert("로그인 실패 ❌\n" + error);
+          alert("❌ 로그인 실패\n" + error);
         });
       });
 
+      // 결제 버튼
       document.getElementById("payBtn").addEventListener("click", function () {
         Pi.createPayment({
           amount: 0.01,
@@ -71,16 +79,16 @@
           metadata: { type: "message", content: "🌸 감성 정원 메시지" },
         }, {
           onReadyForServerApproval: function(paymentId) {
-            alert("서버 승인 필요 🔄\nPaymentID: " + paymentId);
+            alert("🔄 서버 승인 대기\n" + paymentId);
           },
           onReadyForServerCompletion: function(paymentId, txid) {
-            alert("결제 완료! ✅\nTXID: " + txid);
+            alert("✅ 결제 완료\nTXID: " + txid);
           },
           onCancel: function(paymentId) {
-            alert("결제 취소됨 ❌\nPaymentID: " + paymentId);
+            alert("🚫 결제 취소됨\n" + paymentId);
           },
           onError: function(error, paymentId) {
-            alert("결제 실패 ⚠️\n" + error);
+            alert("⚠️ 결제 오류\n" + error);
           }
         });
       });
