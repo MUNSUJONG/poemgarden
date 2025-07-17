@@ -3,74 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원 – 전체 통합 + Pi 결제</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <title>파이 감성정원 – Pi 결제 연동</title>
   <style>
-    body { font-family: 'Apple SD Gothic Neo', sans-serif; background-color: #fffafc; padding: 20px; text-align: center; }
-    h1 { color: #d81b60; }
+    body {
+      background-color: #fff6f9;
+      text-align: center;
+      font-family: "Arial", sans-serif;
+      padding: 50px 20px;
+    }
+    h1 {
+      font-size: 26px;
+      color: #d81b60;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 30px;
+    }
     button {
-      padding: 12px 20px;
+      background-color: #ec407a;
+      border: none;
+      padding: 12px 24px;
       margin: 10px;
       font-size: 16px;
-      background: #ec407a;
-      color: white;
-      border: none;
       border-radius: 8px;
       cursor: pointer;
+      color: white;
     }
-    #paymentResult {
-      margin-top: 20px;
-      font-size: 18px;
-      color: green;
+    button:hover {
+      background-color: #c2185b;
+    }
+    .warning {
+      font-size: 14px;
+      color: #ff1744;
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
   <h1>🌸 파이 감성정원 – Pi 결제 연동</h1>
-
   <p>아래 버튼을 눌러 Pi 계정으로 로그인하고, 감성 메시지를 결제해보세요.</p>
 
-  <button onclick="piLogin()">🔐 Pi 로그인</button>
+  <button onclick="loginWithPi()">🔐 Pi 로그인</button>
   <button onclick="makePayment()">💰 0.01π 결제 테스트</button>
 
-  <div id="paymentResult"></div>
+  <div class="warning">※ Pi 브라우저에서 직접 접속해야 버튼이 작동합니다.</div>
 
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    // Pi SDK 초기화
-    const scopes = ['username', 'payments'];
-    const onIncompletePaymentFound = (payment) => {
-      console.log("미완료 결제 발견:", payment);
-    };
+    const paymentAmount = 0.01;
+    const paymentMemo = "감성 메시지 결제";
 
-    Pi.init({ version: "2.0", sandbox: true }); // sandbox 테스트 모드
+    async function loginWithPi() {
+      if (!window.Pi) {
+        alert("⚠ Pi 브라우저에서 접속해야 로그인 가능합니다.");
+        return;
+      }
 
-    function piLogin() {
-      Pi.authenticate(scopes, onIncompletePaymentFound).then(function(auth) {
-        alert("로그인 성공! 사용자: " + auth.user.username);
-      }).catch(function(error) {
+      try {
+        const scopes = ['username', 'payments'];
+        const authResult = await Pi.authenticate(scopes);
+        alert(`로그인 성공: ${authResult.user.username}`);
+        console.log("인증 결과:", authResult);
+      } catch (error) {
         alert("로그인 실패: " + error);
-      });
+      }
     }
 
-    function makePayment() {
-      Pi.createPayment({
-        amount: 0.01,
-        memo: "감성 메시지 구매",
-        metadata: { type: "emotion_msg", value: "comfort" }
-      }, {
-        onReadyForServerApproval: function(paymentId) {
-          document.getElementById("paymentResult").innerText = "✅ 승인 대기 중: " + paymentId;
-        },
-        onReadyForServerCompletion: function(paymentId, txid) {
-          document.getElementById("paymentResult").innerText = "🎉 결제 성공! 트랜잭션 ID: " + txid;
-        },
-        onCancel: function(paymentId) {
-          document.getElementById("paymentResult").innerText = "❌ 사용자가 결제를 취소했습니다.";
-        },
-        onError: function(error, payment) {
-          document.getElementById("paymentResult").innerText = "⚠️ 결제 오류 발생: " + error;
-        }
-      });
+    async function makePayment() {
+      if (!window.Pi) {
+        alert("⚠ Pi 브라우저에서 접속해야 결제 가능합니다.");
+        return;
+      }
+
+      try {
+        const paymentData = {
+          amount: paymentAmount,
+          memo: paymentMemo,
+          metadata: { type: "gamsung-message" }
+        };
+
+        Pi.createPayment(paymentData, {
+          onReadyForServerApproval: function(paymentId) {
+            console.log("서버 승인 필요:", paymentId);
+          },
+          onReadyForServerCompletion: function(paymentId, txid) {
+            console.log("결제 완료 처리 필요:", paymentId, txid);
+            alert("🎉 결제 완료! 감성 메시지가 전송됩니다.");
+          },
+          onCancel: function(paymentId) {
+            alert("❌ 결제가 취소되었습니다.");
+          },
+          onError: function(error, paymentId) {
+            alert("🚫 결제 오류: " + error);
+          }
+        });
+      } catch (error) {
+        alert("결제 실패: " + error);
+      }
     }
   </script>
 </body>
