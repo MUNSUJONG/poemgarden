@@ -1,28 +1,83 @@
-function login() {
-  Pi.authenticate(['username'], (res) => {
-    alert("로그인 성공: " + JSON.stringify(res));
-  }, (err) => {
-    alert("로그인 실패: " + err);
-  });
-}
 
-function pay() {
-  Pi.createPayment({
-    amount: 0.01,
-    memo: "감성 메시지 결제",
-    metadata: {type: "message", content: "테스트 결제입니다"}
-  }, {
-    onReadyForServerApproval: (paymentId) => {
-      alert("서버 승인 필요: " + paymentId);
-    },
-    onReadyForServerCompletion: (paymentId, txid) => {
-      alert("결제 완료! TXID: " + txid);
-    },
-    onCancel: (paymentId) => {
-      alert("결제 취소: " + paymentId);
-    },
-    onError: (err, paymentId) => {
-      alert("결제 실패: " + err);
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🌸 파이 감성정원 V2 – Bloom the World</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #fff0f5, #fce4ec);
+      font-family: 'Arial', sans-serif;
+      text-align: center;
+      padding: 40px;
+      color: #880e4f;
     }
-  });
-}
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    .btn {
+      margin: 15px;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #ec407a;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+      background-color: #d81b60;
+    }
+    .info {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #6a1b9a;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌸 파이 감성정원 V2</h1>
+  <p>매일 감성을 전하는 정원에서<br>당신의 마음을 결제해보세요.</p>
+  <button class="btn" onclick="login()">🔐 Pi 로그인</button>
+  <button class="btn" onclick="pay()">💖 감성 메시지 결제 (0.01π)</button>
+  <div class="info">Netlify 배포주소: poemgarden.netlify.app<br>PiNet: poemgarden2950</div>
+
+  <script>
+    function login() {
+      Pi.authenticate(['username'], function(res) {
+        alert("✅ 로그인 성공: " + JSON.stringify(res));
+      }, function(err) {
+        alert("❌ 로그인 실패: " + err);
+      });
+    }
+
+    function pay() {
+      Pi.createPayment({
+        amount: 0.01,
+        memo: "감성 메시지 결제",
+        metadata: {
+          type: "message",
+          content: "테스트 결제입니다"
+        }
+      }, {
+        onReadyForServerApproval: function(paymentId) {
+          alert("🕐 서버 승인 필요: " + paymentId);
+        },
+        onReadyForServerCompletion: function(paymentId, txid) {
+          alert("✅ 결제 완료! TXID: " + txid);
+        },
+        onCancel: function(paymentId) {
+          alert("❌ 결제 취소: " + paymentId);
+        },
+        onError: function(err, paymentId) {
+          alert("🚫 결제 실패: " + err);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
