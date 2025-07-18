@@ -1,96 +1,94 @@
-
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌸 파이 감성정원 – Bloom the World</title>
+  <title>🌸 파이 감성정원 2.0 🌸</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     body {
-      background-color: #fff0f5;
+      background-color: #ffeef5;
       text-align: center;
       padding: 50px;
-      font-family: 'Arial', sans-serif;
+      font-family: 'Apple SD Gothic Neo', sans-serif;
     }
     h1 {
-      color: #d81b60;
-      font-size: 30px;
-      margin-bottom: 10px;
+      color: #e91e63;
+      font-size: 2.5rem;
     }
     p {
-      font-size: 18px;
-      margin-bottom: 20px;
+      font-size: 1.2rem;
+      margin-bottom: 40px;
     }
     button {
-      padding: 12px 24px;
-      font-size: 16px;
-      margin: 8px;
-      background-color: #ec407a;
-      color: white;
+      display: block;
+      width: 80%;
+      margin: 15px auto;
+      padding: 15px;
+      font-size: 1.1rem;
       border: none;
       border-radius: 10px;
       cursor: pointer;
     }
-    button:hover {
-      background-color: #d81b60;
+    #loginButton {
+      background-color: #f06292;
+      color: white;
     }
-    .status {
-      margin-top: 20px;
-      color: #333;
-      font-size: 16px;
+    #payButton {
+      background-color: #ec407a;
+      color: white;
     }
   </style>
 </head>
 <body>
-  <h1>🌸 파이 감성정원 2.0</h1>
+  <h1>🌸 파이 감성정원 2.0 🌸</h1>
   <p>Pi 브라우저에서 로그인하고 감성 메시지를 체험해보세요</p>
 
-  <button onclick="loginWithPi()">🔐 Pi 로그인</button>
-  <button onclick="makePayment()">🪙 감성 메시지 결제 (0.01π)</button>
+  <button id="loginButton">🔐 Pi 로그인</button>
+  <button id="payButton">💰 감성 메시지 결제 (0.01π)</button>
 
-  <div class="status" id="statusMsg"></div>
-
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-    window.addEventListener("load", () => {
-      if (!window.Pi) {
-        document.getElementById("statusMsg").innerText = "⚠️ Pi SDK가 로드되지 않았습니다. Pi 브라우저에서 접속해주세요.";
-        return;
+    window.addEventListener('load', function () {
+      if (window.Pi) {
+        Pi.init({
+          version: "2.0",
+          sandbox: true,
+          apiKey: "glr8jhpolnggoxvnxwjssf4qer3rvwbftk1n1sz7l3ydvnph651rgpdyrwfyn4o0"
+        });
+
+        document.getElementById("loginButton").addEventListener("click", function () {
+          Pi.authenticate(["username", "payments"], function(auth) {
+            alert("로그인 성공: " + auth.user.username);
+          }, function(error) {
+            alert("로그인 실패: " + error);
+          });
+        });
+
+        document.getElementById("payButton").addEventListener("click", function () {
+          Pi.createPayment({
+            amount: 0.01,
+            memo: "감성 메시지 체험 결제",
+            metadata: { type: "emotional_message" }
+          }, {
+            onReadyForServerApproval: function(paymentId) {
+              console.log("결제 승인 준비됨: " + paymentId);
+            },
+            onReadyForServerCompletion: function(paymentId, txid) {
+              console.log("결제 완료 준비됨: " + paymentId + " / TX: " + txid);
+              alert("결제가 완료되었습니다!");
+            },
+            onCancel: function(paymentId) {
+              alert("결제가 취소되었습니다.");
+            },
+            onError: function(error, paymentId) {
+              alert("결제 오류: " + error);
+            }
+          });
+        });
+
+      } else {
+        console.log("Pi SDK를 불러오지 못했습니다.");
       }
-
-      Pi.init({
-        version: "2.0",
-        sandbox: true
-      });
-
-      window.loginWithPi = function () {
-        Pi.authenticate(['username'], function(authResult) {
-          document.getElementById("statusMsg").innerText = "🎉 로그인 성공: " + JSON.stringify(authResult);
-        }, function(error) {
-          document.getElementById("statusMsg").innerText = "❌ 로그인 실패: " + error;
-        });
-      };
-
-      window.makePayment = function () {
-        Pi.createPayment({
-          amount: 0.01,
-          memo: "Bloom the World – 감성 메시지",
-          metadata: { type: "message", content: "🌸 당신에게 전하는 감성의 향기" }
-        }, {
-          onReadyForServerApproval: function(paymentId) {
-            document.getElementById("statusMsg").innerText = "🔄 결제 승인 대기 중: " + paymentId;
-          },
-          onReadyForServerCompletion: function(paymentId, txid) {
-            document.getElementById("statusMsg").innerText = "✅ 결제 완료! TXID: " + txid;
-          },
-          onCancel: function(paymentId) {
-            document.getElementById("statusMsg").innerText = "🚫 결제 취소됨";
-          },
-          onError: function(error, paymentId) {
-            document.getElementById("statusMsg").innerText = "⚠️ 결제 오류: " + error;
-          }
-        });
-      };
     });
   </script>
 </body>
