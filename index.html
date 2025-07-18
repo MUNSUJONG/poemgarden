@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🌸 파이 감성정원 2.0 🌸</title>
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <style>
     body {
       background-color: #ffeef5;
@@ -30,6 +29,8 @@
   <button id="loginButton">🔐 Pi 로그인</button>
   <button id="payButton">💰 감성 메시지 결제 (0.01π)</button>
 
+  <!-- Pi SDK 및 JS 코드는 body 하단에 위치해야 Pi 브라우저 정상작동 -->
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
     window.addEventListener('load', function () {
       if (window.Pi) {
@@ -78,7 +79,7 @@
         });
 
       } else {
-        console.log("Pi SDK를 불러오지 못했습니다.");
+        alert("Pi 브라우저에서만 실행됩니다. Pi SDK를 불러오지 못했습니다.");
       }
     });
   </script>
