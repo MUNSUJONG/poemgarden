@@ -12,26 +12,75 @@
       padding: 50px;
       font-family: 'Apple SD Gothic Neo', sans-serif;
     }
-    h1 {
-      color: #e91e63;
-      font-size: 2.5rem;
-    }
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 40px;
-    }
+    h1 { color: #e91e63; font-size: 2.5rem; }
+    p { font-size: 1.2rem; margin-bottom: 40px; }
     button {
-      display: block;
-      width: 80%;
-      margin: 15px auto;
-      padding: 15px;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
+      display: block; width: 80%; margin: 15px auto;
+      padding: 15px; font-size: 1.1rem; border: none;
+      border-radius: 10px; cursor: pointer;
     }
-    #loginButton {
-      background-color: #f06292;
-      color: white;
-    }
-    #payButton {
+    #loginButton { background-color: #f06292; color: white; }
+    #payButton { background-color: #ec407a; color: white; }
+  </style>
+</head>
+<body>
+  <h1>🌸 파이 감성정원 2.0 🌸</h1>
+  <p>Pi 브라우저에서 로그인하고 감성 메시지를 체험해보세요</p>
+
+  <button id="loginButton">🔐 Pi 로그인</button>
+  <button id="payButton">💰 감성 메시지 결제 (0.01π)</button>
+
+  <script>
+    window.addEventListener('load', function () {
+      if (window.Pi) {
+        Pi.init({
+          version: "2.0",
+          sandbox: true,
+          apiKey: "glr8jhpolnggoxvnxwjssf4qer3rvwbftk1n1sz7l3ydvnph651rgpdyrwfyn4o0"
+        });
+
+        document.getElementById("loginButton").addEventListener("click", function () {
+          Pi.authenticate(["username", "payments"], function(auth) {
+            alert("로그인 성공: " + auth.user.username);
+          }, function(error) {
+            alert("로그인 실패: " + error);
+          });
+        });
+
+        document.getElementById("payButton").addEventListener("click", function () {
+          Pi.createPayment({
+            amount: 0.01,
+            memo: "감성 메시지 체험 결제",
+            metadata: { type: "emotional_message" }
+          }, {
+            onReadyForServerApproval: function(paymentId) {
+              fetch("https://pi-server-poemgarden.onrender.com/payments/approve", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ paymentId })
+              });
+            },
+            onReadyForServerCompletion: function(paymentId, txid) {
+              fetch("https://pi-server-poemgarden.onrender.com/payments/complete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ paymentId, txid })
+              });
+              alert("결제가 완료되었습니다!");
+            },
+            onCancel: function(paymentId) {
+              alert("결제가 취소되었습니다.");
+            },
+            onError: function(error, paymentId) {
+              alert("결제 오류: " + error);
+            }
+          });
+        });
+
+      } else {
+        console.log("Pi SDK를 불러오지 못했습니다.");
+      }
+    });
+  </script>
+</body>
+</html>
