@@ -1,0 +1,8 @@
+{
+  "name": "Me2World – 미투월드",
+  "description": "감성과 취미를 공유하는 글로벌 Web3 공간. Pi 결제, NFT, 레벨 시스템 포함.",
+  "permissions": ["username", "payments"],
+  "api": {
+    "payment": true
+  }
+}
