@@ -3,58 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>파이 감성정원</title>
+  <title>🌸 파이 감성정원 🌸</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
-  <script>
-    // Pi 앱 AIP 코드 설정
-    const piAppId = "c514qbry24epcduq58dnbcslv3d2wpk8y3dyjirlamzmraqctfowk1sp8upbsczi";
-
-    // Pi 로그인
-    async function piLogin() {
-      try {
-        const scopes = ['username', 'payments'];
-        const authResult = await window.Pi.authenticate(scopes, onIncompletePaymentFound);
-        alert("로그인 완료! 사용자명: " + authResult.user.username);
-      } catch (error) {
-        console.error("로그인 오류:", error);
-      }
-    }
-
-    // 결제 처리
-    async function makePayment() {
-      const paymentData = {
-        amount: 0.01,
-        memo: "감성정원 결제",
-        metadata: { type: "test-payment" }
-      };
-      try {
-        const payment = await window.Pi.createPayment(paymentData, {
-          onReadyForServerApproval: function(paymentId) {
-            console.log("서버 승인 필요:", paymentId);
-            // 여기에 서버 승인 로직 추가
-          },
-          onIncompletePaymentFound: onIncompletePaymentFound,
-          onCancelled: function(paymentId) {
-            alert("결제가 취소되었습니다.");
-          },
-          onError: function(error, payment) {
-            console.error("결제 오류:", error);
-          }
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    function onIncompletePaymentFound(payment) {
-      console.log("미완료 결제 발견:", payment);
-    }
-  </script>
 </head>
-<body style="background-color: #fff0f5; text-align: center; padding: 50px; font-family: 'Arial', sans-serif;">
+<body style="background-color:#fff8f0; font-family: sans-serif; text-align: center; padding: 50px;">
   <h1 style="color: #c2185b;">🌸 파이 감성정원 🌸</h1>
   <p>0.01π 테스트 결제를 진행해보세요.</p>
-  <button onclick="piLogin()" style="padding: 12px 20px; margin: 10px; font-size: 16px;">🧑‍💻 Pi 로그인</button>
-  <button onclick="makePayment()" style="padding: 12px 20px; font-size: 16px;">💳 결제하기</button>
+
+  <button id="pi-login">Pi 로그인</button>
+  <button id="pay-button">결제하기</button>
+
+  <script>
+    Pi.init({ version: "2.0", sandbox: true });
+
+    document.getElementById("pi-login").addEventListener("click", async () => {
+      try {
+        const scopes = ["username", "payments"];
+        const result = await Pi.authenticate(scopes, function onIncompletePaymentFound(payment) {
+          console.log("이전 결제 발견됨:", payment);
+        });
+        console.log("로그인 결과:", result);
+      } catch (err) {
+        console.error("로그인 오류:", err);
+      }
+    });
+
+    document.getElementById("pay-button").addEventListener("click", async () => {
+      try {
+        const paymentData = {
+          amount: 0.01,
+          memo: "파이 감성정원 테스트 결제",
+          metadata: { project: "poemgarden-v2" }
+        };
+
+        const payment = await Pi.createPayment(paymentData, {
+          onReadyForServerApproval: function(paymentId) {
+            fetch("https://pi-server-poemgarden.onrender.com/approve", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId })
+            });
+          },
+          onReadyForServerCompletion: function(paymentId, txid) {
+            fetch("https://pi-server-poemgarden.onrender.com/complete", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ paymentId, txid })
+            });
+          },
+          onCancel: function(paymentId) {
+            console.log("결제 취소됨:", paymentId);
+          },
+          onError: function(error, payment) {
+            console.error("결제 오류 발생:", error);
+          }
+        });
+
+        console.log("결제 시작:", payment);
+      } catch (err) {
+        console.error("결제 실패:", err);
+      }
+    });
+  </script>
 </body>
 </html>
